@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>修仙小幫狗 · 混沌奇遇寶典</title>
+    <script>
+        (function(){
+            var h = new Date().getHours();
+            var t = h < 8 ? 'night' : h < 16 ? 'mist' : 'ink';
+            var bg = { night:'#1a1c23', mist:'#E8F1F8', ink:'#F2EDE3' };
+            document.documentElement.className = t;
+            document.documentElement.style.backgroundColor = bg[t];
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap');
+        * { box-sizing: border-box; }
+
+        html, body { overflow-x: hidden; max-width: 100vw; }
+        html { background: #1a1c23; }
+        html.mist { background: #E8F1F8; }
+        html.ink  { background: #F2EDE3; }
+        body { background: transparent; min-height: 100vh; }
+
+        body {
+            -webkit-user-select: none; -moz-user-select: none; user-select: none;
+            padding: 0; min-height: 100vh;
+            transition: background-color 1.4s ease, color 1.4s ease;
+        }
+        input, textarea { -webkit-user-select: text; -moz-user-select: text; user-select: text; }
+
+        /* ══ 底紋 ══ */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            transition: opacity 1.4s ease;
+        }
+        .night::before { opacity: 0; }
+        .mist::before {
+            background-image:
+                radial-gradient(ellipse at 15% 0%, rgba(120,180,220,0.22) 0%, transparent 45%),
+                radial-gradient(ellipse at 85% 100%, rgba(100,160,200,0.18) 0%, transparent 45%);
+        }
+        .ink::before {
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(139,110,60,0.06) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(139,110,60,0.04) 40px);
+        }
+
+        /* ══ 三底色 ══ */
+        html.night, .night { background-color: #1a1c23; color: #e2e8f0; }
+        html.mist,  .mist  { background-color: #E8F1F8; color: #1E3D52; }
+        html.ink,   .ink   { background-color: #F2EDE3; color: #3D2B1A; }
+        .night, .mist, .ink { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', 'Helvetica Neue', sans-serif; }
+
+        /* ══ Header ══ */
+        .header {
+            backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 50;
+            padding: 14px 16px 10px;
+            transition: background 1.4s ease, border-color 1.4s ease;
+        }
+        .night .header { background: rgba(15,17,26,0.85);  border-bottom: 1px solid #2d3748; }
+        .mist  .header { background: rgba(232,241,248,0.92); border-bottom: 1px solid #B0CCE0; }
+        .ink   .header { background: rgba(242,237,227,0.92); border-bottom: 1px solid #C9B99A; }
+
+        /* 標題漸層：night 保留原版金色漸層，mist/ink 用純色 */
+        .site-title {
+            font-size: 22px; font-weight: 700; letter-spacing: .06em;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 1.4s ease;
+        }
+        .night .site-title {
+            font-family: serif;
+            background: linear-gradient(to right, #fef08a, #fbbf24, #fde68a);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .night .site-title .emoji { -webkit-text-fill-color: initial; background: none; }
+        .mist  .site-title { font-family: 'Noto Serif TC', serif; color: #1E3D52; -webkit-text-fill-color: #1E3D52; }
+        .ink   .site-title { font-family: 'Noto Serif TC', serif; color: #3D2B1A; -webkit-text-fill-color: #3D2B1A; }
+
+        .count-badge { font-size: 11px; border-radius: 20px; padding: 2px 10px; font-weight: 400; transition: all 1.4s ease; }
+        .night .count-badge { background: rgba(120,80,0,0.4); color: #fbbf24; border: 1px solid rgba(120,80,0,0.5); }
+        .mist  .count-badge { background: rgba(91,163,201,0.15); color: #1E6090; border: .5px solid rgba(91,163,201,0.4); }
+        .ink   .count-badge { background: rgba(192,57,27,0.12); color: #C0391B; border: .5px solid rgba(192,57,27,0.3); }
+
+        .title-sub { font-size: 12px; margin-top: 3px; transition: color 1.4s ease; }
+        .night .title-sub { color: #78716c; font-family: serif; font-weight: 600; }
+        .mist  .title-sub { color: #4A7090; font-family: 'Noto Serif TC', serif; letter-spacing: .05em; }
+        .ink   .title-sub { color: #7A5C3A; font-family: 'Noto Serif TC', serif; letter-spacing: .05em; }
+
+        .search-input {
+            padding: 6px 14px; border-radius: 8px; font-size: 13px;
+            width: 100%; max-width: 320px; outline: none;
+            transition: all 1.4s ease;
+        }
+        .night .search-input { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; font-family: sans-serif; }
+        .night .search-input::placeholder { color: #64748b; }
+        .night .search-input:focus { border-color: #f59e0b; }
+        .mist  .search-input { background: rgba(250,253,255,0.92); border: 1px solid #B0CCE0; color: #1E3D52; font-family: 'Noto Serif TC', serif; }
+        .mist  .search-input::placeholder { color: #80A8C0; }
+        .mist  .search-input:focus { border-color: #5BA3C9; }
+        .ink   .search-input { background: rgba(255,251,242,0.9); border: 1px solid #C9B99A; color: #3D2B1A; font-family: 'Noto Serif TC', serif; }
+        .ink   .search-input::placeholder { color: #A8896A; }
+        .ink   .search-input:focus { border-color: #B8860B; }
+
+        .filter-row {
+            margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px;
+            align-items: center; padding-top: 10px;
+            transition: border-color 1.4s ease;
+        }
+        .night .filter-row { border-top: 1px solid rgba(45,55,72,0.5); }
+        .mist  .filter-row { border-top: .5px solid #B0CCE0; }
+        .ink   .filter-row { border-top: .5px solid #C9B99A; }
+
+        .filter-label { font-size: 11px; margin-right: 2px; transition: color 1.4s ease; }
+        .night .filter-label { color: #94a3b8; }
+        .mist  .filter-label { color: #4A7090; }
+        .ink   .filter-label { color: #7A5C3A; }
+
+        /* ── Filter buttons ── */
+        .filter-btn { padding: 2px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: all .2s; border: none; }
+        /* Night: original Tailwind style */
+        .night .filter-btn { background: #1e293b; color: #cbd5e1; }
+        .night .filter-btn:hover { background: #334155; }
+        .night .filter-btn.active { background: #f59e0b; color: #0f172a; font-weight: 600; }
+        /* Mist */
+        .mist .filter-btn { border: .5px solid #B0CCE0; background: rgba(250,253,255,0.8); color: #2A5878; font-family: 'Noto Serif TC', serif; }
+        .mist .filter-btn:hover, .mist .filter-btn.active { background: #1E3D52; color: #E8F4FC; border-color: #1E3D52; }
+        /* Ink */
+        .ink .filter-btn { border: .5px solid #C9B99A; background: rgba(255,251,242,0.7); color: #5C4030; font-family: 'Noto Serif TC', serif; }
+        .ink .filter-btn:hover, .ink .filter-btn.active { background: #3D2B1A; color: #F2EDE3; border-color: #3D2B1A; }
+
+        /* ══ Grid ══ */
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px; padding: 16px 16px;
+            position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
+        }
+
+        /* ── Search wrap with clear btn ── */
+        .search-wrap { position: relative; width: 100%; max-width: 320px; display: flex; align-items: center; gap: 6px; }
+        .search-wrap .search-input { flex: 1; padding-right: 30px !important; }
+        .clear-btn {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            width: 18px; height: 18px; border-radius: 50%; border: none;
+            cursor: pointer; font-size: 11px; line-height: 1;
+            display: none; align-items: center; justify-content: center;
+            transition: all 1.4s ease;
+        }
+        .clear-btn.visible { display: flex; }
+        .night .clear-btn { background: #475569; color: #cbd5e1; }
+        .mist  .clear-btn { background: #B0CCE0; color: #1E3D52; }
+        .ink   .clear-btn { background: #C9B99A; color: #3D2B1A; }
+
+        /* ── Card shell ── */
+        .card { border-radius: 12px; padding: 4px 10px 12px; transition: all 1.4s ease; }
+        .night .card { background: rgba(36,39,49,0.9); border: 1px solid #2d3748; }
+        .night .card:hover { border-color: rgba(245,158,11,0.3); }
+        .mist  .card { background: rgba(250,253,255,0.9); border: .5px solid #C2D8E8; }
+        .mist  .card:hover { border-color: #5BA3C9; box-shadow: 0 2px 14px rgba(91,163,201,0.12); }
+        .ink   .card { background: rgba(255,251,242,0.88); border: .5px solid #C9B99A; }
+        .ink   .card:hover { border-color: #B8860B; box-shadow: 0 2px 12px rgba(139,110,60,0.12); }
+
+        .card-num { font-size: 8px; line-height: 1; font-family: monospace; margin-bottom: 4px; transition: color 1.4s ease; }
+        .night .card-num { color: #475569; }
+        .mist  .card-num { color: #80A8C4; }
+        .ink   .card-num { color: #A8896A; }
+
+        .card-tag { font-size: 7.5px; margin-left: 5px; padding: 1px 5px; border-radius: 3px; transition: all 1.4s ease; }
+        .night .card-tag { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
+        .mist  .card-tag { color: #4A90B8; }
+        .ink   .card-tag { color: #C0391B; }
+
+        /* ── Option cells ── */
+        .opt-cell {
+            border-radius: 8px; padding: 10px 8px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between;
+            text-align: center; min-height: 72px; transition: all 1.4s ease;
+        }
+        .opt-text  { font-size: 13px; font-weight: 500; margin-bottom: 6px; transition: color 1.4s ease; }
+        .opt-badge { font-size: 10px; padding: 2px 0; border-radius: 4px; font-weight: 700; white-space: nowrap; width: 100%; text-align: center; transition: all 1.4s ease; }
+
+        /* Night — original Tailwind colours */
+        .night .r-聚靈丹{background:rgba(6,78,59,.4);border:1px solid rgba(6,78,59,.4);}.night .r-聚靈丹 .opt-text{color:#34d399;}.night .r-聚靈丹 .opt-badge{background:#10b981;color:#022c22;}
+        .night .r-元氣丹{background:rgba(8,51,68,.4);border:1px solid rgba(8,51,68,.4);}.night .r-元氣丹 .opt-text{color:#22d3ee;}.night .r-元氣丹 .opt-badge{background:#06b6d4;color:#083344;}
+        .night .r-修為{background:rgba(69,26,3,.4);border:1px solid rgba(69,26,3,.4);}.night .r-修為 .opt-text{color:#fbbf24;}.night .r-修為 .opt-badge{background:#f59e0b;color:#1c1917;}
+        .night .r-挑戰帖{background:rgba(76,5,25,.4);border:1px solid rgba(76,5,25,.4);}.night .r-挑戰帖 .opt-text{color:#fb7185;}.night .r-挑戰帖 .opt-badge{background:#f43f5e;color:#fff1f2;}
+        .night .r-幽冥{background:rgba(46,16,101,.4);border:1px solid rgba(46,16,101,.4);}.night .r-幽冥 .opt-text{color:#c084fc;}.night .r-幽冥 .opt-badge{background:#a855f7;color:#faf5ff;}
+        .night .r-仙工鎬{background:rgba(67,20,7,.4);border:1px solid rgba(67,20,7,.4);}.night .r-仙工鎬 .opt-text{color:#fb923c;}.night .r-仙工鎬 .opt-badge{background:#f97316;color:#1c1917;}
+        .night .r-不要選{background:rgba(15,23,42,.2);border:1px solid #1e293b;opacity:.35;}.night .r-不要選 .opt-text{color:#64748b;}.night .r-不要選 .opt-badge{background:#1e293b;color:#475569;}
+        .night .r-無獎勵{background:rgba(15,23,42,.2);border:1px solid #1e293b;opacity:.35;}.night .r-無獎勵 .opt-text{color:#64748b;}.night .r-無獎勵 .opt-badge{background:#1e293b;color:#475569;}
+
+        /* Mist */
+        .mist .r-聚靈丹{background:#E4F4EC;border:.5px solid #90CCA8;}.mist .r-聚靈丹 .opt-text{color:#1A6040;}.mist .r-聚靈丹 .opt-badge{background:#3CA882;color:#F0FAF5;}
+        .mist .r-元氣丹{background:#FEF5E4;border:.5px solid #D4B870;}.mist .r-元氣丹 .opt-text{color:#7A4A08;}.mist .r-元氣丹 .opt-badge{background:#D4A832;color:#FEF8E8;}
+        .mist .r-修為{background:#E4F0FA;border:.5px solid #88BCDE;}.mist .r-修為 .opt-text{color:#0C447C;}.mist .r-修為 .opt-badge{background:#2E7AB8;color:#EEF7FF;}
+        .mist .r-挑戰帖{background:#FDECEA;border:.5px solid #D89898;}.mist .r-挑戰帖 .opt-text{color:#8C2018;}.mist .r-挑戰帖 .opt-badge{background:#C03830;color:#FFF0EE;}
+        .mist .r-幽冥{background:#EEE8F8;border:.5px solid #A888D8;}.mist .r-幽冥 .opt-text{color:#3C1880;}.mist .r-幽冥 .opt-badge{background:#6040B0;color:#F5F0FF;}
+        .mist .r-仙工鎬{background:#FFF4E0;border:.5px solid #D4B050;}.mist .r-仙工鎬 .opt-text{color:#6B4000;}.mist .r-仙工鎬 .opt-badge{background:#B08000;color:#FFF8E8;}
+        .mist .r-不要選{background:rgba(200,220,235,.25);border:.5px solid #C2D8E8;opacity:.5;}.mist .r-不要選 .opt-text{color:#688090;}.mist .r-不要選 .opt-badge{background:#C2D8E8;color:#4A6878;}
+        .mist .r-無獎勵{background:rgba(200,220,235,.2);border:.5px solid #C2D8E8;opacity:.5;}.mist .r-無獎勵 .opt-text{color:#688090;}.mist .r-無獎勵 .opt-badge{background:#D8E8F2;color:#4A6878;}
+
+        /* Ink */
+        .ink .r-聚靈丹{background:#E8F2E4;border:.5px solid #8DC07C;}.ink .r-聚靈丹 .opt-text{color:#2D5C1E;}.ink .r-聚靈丹 .opt-badge{background:#4A7C3F;color:#F2EDE3;}
+        .ink .r-元氣丹{background:#FEF6E8;border:.5px solid #D9AE6A;}.ink .r-元氣丹 .opt-text{color:#7A3D08;}.ink .r-元氣丹 .opt-badge{background:#B8860B;color:#F2EDE3;}
+        .ink .r-修為{background:#EEF4FB;border:.5px solid #8AACCC;}.ink .r-修為 .opt-text{color:#1E3D5C;}.ink .r-修為 .opt-badge{background:#2E6096;color:#F2EDE3;}
+        .ink .r-挑戰帖{background:#FDECEA;border:.5px solid #D98080;}.ink .r-挑戰帖 .opt-text{color:#8C2918;}.ink .r-挑戰帖 .opt-badge{background:#C0391B;color:#F2EDE3;}
+        .ink .r-幽冥{background:#EDE8F5;border:.5px solid #9E86CC;}.ink .r-幽冥 .opt-text{color:#3C2870;}.ink .r-幽冥 .opt-badge{background:#5C3FA0;color:#F2EDE3;}
+        .ink .r-仙工鎬{background:#FFF3E0;border:.5px solid #D4A040;}.ink .r-仙工鎬 .opt-text{color:#6B4000;}.ink .r-仙工鎬 .opt-badge{background:#A06800;color:#F2EDE3;}
+        .ink .r-不要選{background:rgba(200,185,165,.2);border:.5px solid #C9B99A;opacity:.55;}.ink .r-不要選 .opt-text{color:#7A6248;}.ink .r-不要選 .opt-badge{background:#A08060;color:#F2EDE3;}
+        .ink .r-無獎勵{background:rgba(200,185,165,.15);border:.5px solid #C9B99A;opacity:.65;}.ink .r-無獎勵 .opt-text{color:#7A6248;}.ink .r-無獎勵 .opt-badge{background:#C9B99A;color:#5C4030;}
+
+        
+        
+        .night 
+        .mist  
+        .ink   
+
+        
+        
+        
+        .night 
+        .night 
+        .night 
+        .mist  
+        .mist  
+        .mist  
+        .ink   
+        .ink   
+        .ink   
+
+        
+        
+        
+        
+        
+        
+
+        #scrollTopBtn {
+            position: fixed; bottom: 16px; right: 20px;
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 14px; cursor: pointer; border: none;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 1.4s ease;
+            z-index: 200;
+        }
+        .night #scrollTopBtn { background: #f59e0b; color: #1c1917; }
+        .mist  #scrollTopBtn { background: #1E3D52; color: #E8F4FC; }
+        .ink   #scrollTopBtn { background: #3D2B1A; color: #F2EDE3; }
+
+        /* ══ Pill nav ══ */
+#bottom-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:2px;z-index:100;padding:6px 8px;border-radius:999px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 1.4s ease;}
+.night #bottom-bar{background:rgba(10,14,20,0.92);border:0.5px solid rgba(255,255,255,0.1);}
+.mist  #bottom-bar{background:rgba(232,241,248,0.92);border:.5px solid #B0CCE0;}
+.ink   #bottom-bar{background:rgba(242,237,227,0.92);border:.5px solid #C9B99A;}
+#clock-txt{font-size:11px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
+.night #clock-txt{color:#f59e0b;}
+.mist  #clock-txt{color:#1E3D52;}
+.ink   #clock-txt{color:#3D2B1A;}
+.p-sep{width:0.5px;height:14px;margin:0 4px;transition:background 1.4s ease;}
+.night .p-sep{background:rgba(255,255,255,0.08);}
+.mist  .p-sep{background:#C2D8E8;}
+.ink   .p-sep{background:#C9B99A;}
+#theme-cycle{width:10px;height:10px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:all .25s;flex-shrink:0;margin:0 4px;}
+.night #theme-cycle{border-color:rgba(245,158,11,0.5);}
+.mist  #theme-cycle{border-color:#5BA3C9;}
+.ink   #theme-cycle{border-color:#B8860B;}
+.p-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 7px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.p-tab-icon{font-size:15px;transition:color 1.4s ease;}
+.p-tab-label{font-size:8px;white-space:nowrap;transition:color 1.4s ease;}
+.night .p-tab-icon,.night .p-tab-label{color:#374151;}
+.night .p-tab.on .p-tab-icon,.night .p-tab.on .p-tab-label{color:#f59e0b;}
+.mist  .p-tab-icon,.mist  .p-tab-label{color:#90B8D0;}
+.mist  .p-tab.on .p-tab-icon,.mist  .p-tab.on .p-tab-label{color:#1E3D52;}
+.ink   .p-tab-icon,.ink   .p-tab-label{color:#C9B99A;}
+.ink   .p-tab.on .p-tab-icon,.ink   .p-tab.on .p-tab-label{color:#3D2B1A;}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div style="max-width:1200px;margin:0 auto">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+                <h1 class="site-title" style="font-size:20px;margin:0 0 2px 0;display:flex;align-items:center;gap:8px">
+                    <span class="emoji">🐶</span> 修仙小幫狗
+                    <span class="count-badge" id="totalBadge" style="font-size:11px;font-weight:400">154 筆</span>
+                </h1>
+                <h3 class="site-title" style="font-size:15px;margin:0 0 4px 0;letter-spacing:.08em"><span class="emoji">☯</span> 混沌奇遇寶典</h3>
+                <div class="title-sub">窺探天機，趨吉避凶。助道友一鍵勘破。</div>
+            </div>
+            <div class="search-wrap">
+                <input type="text" id="searchInput" class="search-input" placeholder="輸入因果關鍵字（如：過去、仙草）…">
+                <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+            </div>
+            <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="語音搜尋">🎙️</button>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">依造化倒查：</span>
+            <button onclick="filterReward('all')" class="filter-btn active" id="fb-all">全部</button>
+            <button onclick="filterReward('聚靈丹')" class="filter-btn" id="fb-聚靈丹">聚靈丹</button>
+            <button onclick="filterReward('元氣丹')" class="filter-btn" id="fb-元氣丹">元氣丹</button>
+            <button onclick="filterReward('修為')" class="filter-btn" id="fb-修為">修為</button>
+            <button onclick="filterReward('挑戰帖')" class="filter-btn" id="fb-挑戰帖">挑戰帖</button>
+            <button onclick="filterReward('幽冥')" class="filter-btn" id="fb-幽冥">幽冥</button>
+            <button onclick="filterReward('仙工鎬')" class="filter-btn" id="fb-仙工鎬">仙工鎬</button>
+            <button onclick="filterReward('無獎勵')" class="filter-btn" id="fb-無獎勵">無獎勵/不要選</button>
+        </div>
+    </div>
+</header>
+
+<div class="grid-container" id="cardsContainer"></div>
+
+<div id="bottom-bar">
+  <span id="clock-txt">☾ 00:00</span>
+  <div class="p-sep"></div>
+  <div id="theme-cycle" onclick="cyclePillTheme()" title="切換主題"></div>
+  <div class="p-sep"></div>
+  <a href="index.html" class="p-tab">
+    <span class="p-tab-icon">🏠</span>
+    <span class="p-tab-label">首頁</span>
+  </a>
+  <a href="quiz-adv.html" class="p-tab on">
+    <span class="p-tab-icon">📖</span>
+    <span class="p-tab-label">奇遇</span>
+  </a>
+  <a href="cal.html" class="p-tab">
+    <span class="p-tab-icon">⚡</span>
+    <span class="p-tab-label">修為</span>
+  </a>
+  <a href="contact.html" class="p-tab">
+    <span class="p-tab-icon">✉️</span>
+    <span class="p-tab-label">聯絡</span>
+  </a>
+</div>
+</div>
+</div>
+
+<button id="scrollTopBtn" style="display:none" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
+
+<script>
+        const rawData = [
+            { id: 1, options: [{ text: "過去", reward: "聚靈丹" }, { text: "未來", reward: "不要選" }] },
+            { id: 2, options: [{ text: "前往黑水湖", reward: "不要選" }, { text: "前往花蓮村", reward: "聚靈丹" }] },
+            { id: 3, options: [{ text: "與其戰鬥", reward: "聚靈丹" }, { text: "好言相勸", reward: "不要選" }] },
+            { id: 4, options: [{ text: "仙草", reward: "修為" }, { text: "丹藥", reward: "聚靈丹" }] },
+            { id: 5, options: [{ text: "救治", reward: "聚靈丹" }, { text: "離去", reward: "不要選" }] },
+            { id: 6, options: [{ text: "幫助鸞鳥", reward: "聚靈丹" }, { text: "幫助金鼠", reward: "元氣丹" }] },
+            { id: 7, options: [{ text: "澆灌藥園", reward: "修為" }, { text: "煉丹", reward: "聚靈丹" }] },
+            { id: 8, options: [{ text: "贈藥", reward: "聚靈丹" }, { text: "救治", reward: "元氣丹" }] },
+            { id: 9, options: [{ text: "乘船前往", reward: "聚靈丹" }, { text: "御劍飛行", reward: "挑戰帖" }] },
+            { id: 10, options: [{ text: "勇敢靠近", reward: "修為" }, { text: "迅速躲避", reward: "不要選" }] },
+            { id: 11, options: [{ text: "淺處挖掘", reward: "修為" }, { text: "深處挖掘", reward: "不要選" }] },
+            { id: 12, options: [{ text: "一同探索", reward: "不要選" }, { text: "分開探索", reward: "元氣丹" }] },
+            { id: 13, options: [{ text: "普通的靈石", reward: "無獎勵" }, { text: "古怪的靈石", reward: "修為" }] },
+            { id: 14, options: [{ text: "與其戰鬥", reward: "挑戰帖" }, { text: "表達敬仰", reward: "修為" }] },
+            { id: 15, options: [{ text: "向左走", reward: "不要選" }, { text: "向右走", reward: "挑戰帖" }] },
+            { id: 16, options: [{ text: "暗中調查", reward: "挑戰帖" }, { text: "正面出擊", reward: "不要選" }] },
+            { id: 17, options: [{ text: "夜晚前往", reward: "元氣丹" }, { text: "白天前往", reward: "不要選" }] },
+            { id: 18, options: [{ text: "食用果實", reward: "修為" }, { text: "飲用溪水", reward: "修為" }] },
+            { id: 19, options: [{ text: "上前切磋", reward: "修為" }, { text: "謙虛回絕", reward: "修為" }] },
+            { id: 20, options: [{ text: "善良", reward: "修為" }, { text: "強大", reward: "挑戰帖" }] },
+            { id: 21, options: [{ text: "自己前往", reward: "不要選" }, { text: "賣給別人", reward: "聚靈丹" }] },
+            { id: 22, options: [{ text: "上前掌燈", reward: "聚靈丹" }, { text: "靜觀其變", reward: "不要選" }] },
+            { id: 23, options: [{ text: "幫助麒麟獸", reward: "聚靈丹" }, { text: "轉身離開", reward: "不要選" }] },
+            { id: 24, options: [{ text: "替他療傷", reward: "聚靈丹" }, { text: "視而不見", reward: "不要選" }] },
+            { id: 25, options: [{ text: "灰色的", reward: "聚靈丹" }, { text: "橙色的", reward: "不要選" }] },
+            { id: 26, options: [{ text: "接受幫助", reward: "聚靈丹" }, { text: "委婉拒絕", reward: "修為" }] },
+            { id: 27, options: [{ text: "寄出寶庫", reward: "不要選" }, { text: "向宗門舉報", reward: "聚靈丹" }] },
+            { id: 28, options: [{ text: "掀翻藥店", reward: "聚靈丹" }, { text: "忍氣吞聲", reward: "不要選" }] },
+            { id: 29, options: [{ text: "打發他回家", reward: "不要選" }, { text: "告訴他祕密", reward: "聚靈丹" }] },
+            { id: 30, options: [{ text: "邀請吃飯", reward: "不要選" }, { text: "贈送手信", reward: "元氣丹" }] },
+            { id: 31, options: [{ text: "前去追趕", reward: "元氣丹" }, { text: "自認倒霉", reward: "不要選" }] },
+            { id: 32, options: [{ text: "趁勝追擊", reward: "元氣丹" }, { text: "放他一馬", reward: "聚靈丹" }] },
+            { id: 33, options: [{ text: "自己試吃", reward: "元氣丹" }, { text: "讓他人試吃", reward: "不要選" }] },
+            { id: 34, options: [{ text: "一探究竟", reward: "修為" }, { text: "不去打探", reward: "不要選" }] },
+            { id: 35, options: [{ text: "佔為己有", reward: "不要選" }, { text: "轉身離開", reward: "無獎勵" }] },
+            { id: 36, options: [{ text: "積極鍛鍊", reward: "修為" }, { text: "放棄挽救", reward: "不要選" }] },
+            { id: 37, options: [{ text: "傾聽", reward: "挑戰帖" }, { text: "拒絕", reward: "不要選" }] },
+            { id: 38, options: [{ text: "堅持修煉", reward: "無獎勵" }, { text: "尋找幫助", reward: "無獎勵" }] },
+            { id: 39, options: [{ text: "前去看看", reward: "不要選" }, { text: "回家收衣", reward: "挑戰帖" }] },
+            { id: 40, options: [{ text: "沉浸欣賞", reward: "無獎勵" }, { text: "打斷他們", reward: "不要選" }] },
+            { id: 41, options: [{ text: "送法寶", reward: "修為" }, { text: "送祝壽詞", reward: "元氣丹" }] },
+            { id: 42, options: [{ text: "餵牠蟲子", reward: "不要選" }, { text: "餵牠水果", reward: "元氣丹" }] },
+            { id: 43, options: [{ text: "幫助村民", reward: "元氣丹" }, { text: "袖手旁觀", reward: "不要選" }] },
+            { id: 44, options: [{ text: "去追彩虹", reward: "元氣丹" }, { text: "專心修煉", reward: "修為" }] },
+            { id: 45, options: [{ text: "前去調查", reward: "修為" }, { text: "閉目許願", reward: "不要選" }] },
+            { id: 46, options: [{ text: "締結契約", reward: "修為" }, { text: "保持獨行", reward: "不要選" }] },
+            { id: 47, options: [{ text: "迎接財神", reward: "修為" }, { text: "躲避神劫", reward: "不要選" }] },
+            { id: 48, options: [{ text: "奪過糖葫蘆", reward: "不要選" }, { text: "再買一支", reward: "挑戰帖" }] },
+            { id: 49, options: [{ text: "捉迷藏", reward: "元氣丹" }, { text: "拍掌唱歌", reward: "不要選" }] },
+            { id: 50, options: [{ text: "不理會", reward: "無獎勵" }, { text: "查看情況", reward: "不要選" }] },
+            { id: 51, options: [{ text: "施法療傷", reward: "元氣丹" }, { text: "送去醫館", reward: "不要選" }] },
+            { id: 52, options: [{ text: "查探原因", reward: "挑戰帖" }, { text: "重新種菜", reward: "不要選" }] },
+            { id: 53, options: [{ text: "採集草藥", reward: "不要選" }, { text: "決定放棄", reward: "無獎勵" }] },
+            { id: 54, options: [{ text: "外出調查", reward: "不要選" }, { text: "屏氣凝神", reward: "無獎勵" }] },
+            { id: 55, options: [{ text: "感恩戴德", reward: "不要選" }, { text: "委婉拒絕", reward: "修為" }] },
+            { id: 56, options: [{ text: "一起修煉", reward: "不要選" }, { text: "獨自修煉", reward: "修為" }] },
+            { id: 57, options: [{ text: "拔刀相助", reward: "元氣丹" }, { text: "明哲保身", reward: "不要選" }] },
+            { id: 58, options: [{ text: "前往探究", reward: "修為" }, { text: "堅持修煉", reward: "修為" }] },
+            { id: 59, options: [{ text: "幫助正道", reward: "元氣丹" }, { text: "害怕波及", reward: "不要選" }] },
+            { id: 60, options: [{ text: "外出調查", reward: "無獎勵" }, { text: "靜觀其變", reward: "無獎勵" }] },
+            { id: 61, options: [{ text: "出門釣魚", reward: "修為" }, { text: "出門砍柴", reward: "不要選" }] },
+            { id: 62, options: [{ text: "煉丹課程", reward: "聚靈丹" }, { text: "戰鬥課程", reward: "不要選" }] },
+            { id: 63, options: [{ text: "買一些", reward: "不要選" }, { text: "下次再買", reward: "修為" }] },
+            { id: 64, options: [{ text: "上前攀談", reward: "修為" }, { text: "不予理會", reward: "無獎勵" }] },
+            { id: 65, options: [{ text: "一把斧頭", reward: "不要選" }, { text: "兩把鐵鍬", reward: "修為" }] },
+            { id: 66, options: [{ text: "提升修為", reward: "不要選" }, { text: "保持謹慎", reward: "修為" }] },
+            { id: 67, options: [{ text: "接受詢問", reward: "不要選" }, { text: "給他一拳", reward: "無獎勵" }] },
+            { id: 68, options: [{ text: "不放在心上", reward: "不要選" }, { text: "去舊館瞧瞧", reward: "修為" }] },
+            { id: 69, options: [{ text: "前去祝賀", reward: "不要選" }, { text: "專心修煉", reward: "修為" }] },
+            { id: 70, options: [{ text: "向大熊問好", reward: "修為" }, { text: "給烏龜吃的", reward: "不要選" }] },
+            { id: 71, options: [{ text: "打發他回家", reward: "不要選" }, { text: "一起去玩", reward: "聚靈丹" }] },
+            { id: 72, options: [{ text: "繼續修煉", reward: "無獎勵" }, { text: "前去湊熱鬧", reward: "不要選" }] },
+            { id: 73, options: [{ text: "厚葬師叔", reward: "聚靈丹" }, { text: "感悟雷劫", reward: "無獎勵" }] },
+            { id: 74, options: [{ text: "揮毫潑墨", reward: "修為" }, { text: "立即入定", reward: "無獎勵" }] },
+            { id: 75, options: [{ text: "御火訣", reward: "聚靈丹" }, { text: "冰封術", reward: "修為" }] },
+            { id: 76, options: [{ text: "喝下魚湯", reward: "不要選" }, { text: "質疑師叔", reward: "元氣丹" }] },
+            { id: 77, options: [{ text: "死記硬背", reward: "修為" }, { text: "暗示劃重點", reward: "無獎勵" }] },
+            { id: 78, options: [{ text: "只說好事", reward: "修為" }, { text: "描述現實", reward: "無獎勵" }] },
+            { id: 79, options: [{ text: "前去論道", reward: "無獎勵" }, { text: "回家打坐", reward: "修為" }] },
+            { id: 80, options: [{ text: "前去拜師", reward: "無獎勵" }, { text: "圍觀戰場", reward: "修為" }] },
+            { id: 81, options: [{ text: "前去參加", reward: "無獎勵" }, { text: "前去圍觀", reward: "修為" }] },
+            { id: 82, options: [{ text: "不出門", reward: "不要選" }, { text: "出門求香火", reward: "無獎勵" }] },
+            { id: 83, options: [{ text: "摸摸他", reward: "不要選" }, { text: "放任他", reward: "修為" }] },
+            { id: 84, options: [{ text: "去看熱鬧", reward: "修為" }, { text: "去賣仙草", reward: "元氣丹" }] },
+            { id: 85, options: [{ text: "直接睡覺", reward: "修為" }, { text: "強忍睡意", reward: "無獎勵" }] },
+            { id: 86, options: [{ text: "開個大石頭", reward: "無獎勵" }, { text: "開個小石頭", reward: "聚靈丹" }] },
+            { id: 87, options: [{ text: "前去打探", reward: "修為" }, { text: "直接搭話", reward: "無獎勵" }] },
+            { id: 88, options: [{ text: "立刻打坐", reward: "無獎勵" }, { text: "繼續論道", reward: "修為" }] },
+            { id: 89, options: [{ text: "回到塵世", reward: "修為" }, { text: "不管不顧", reward: "無獎勵" }] },
+            { id: 90, options: [{ text: "一探究竟", reward: "聚靈丹" }, { text: "歡律作伴", reward: "修為" }] },
+            { id: 91, options: [{ text: "滴一滴血", reward: "修為" }, { text: "注入靈力", reward: "無獎勵" }] },
+            { id: 92, options: [{ text: "欺人大甚", reward: "挑戰帖" }, { text: "忍氣吞聲", reward: "無獎勵" }] },
+            { id: 93, options: [{ text: "指點幾招", reward: "無獎勵" }, { text: "隨她找師兄", reward: "無獎勵" }] },
+            { id: 94, options: [{ text: "提供秘訣", reward: "挑戰帖" }, { text: "詢問緣由", reward: "無獎勵" }] },
+            { id: 95, options: [{ text: "委婉拒絕", reward: "無獎勵" }, { text: "欣然接受", reward: "挑戰帖" }] },
+            { id: 96, options: [{ text: "討賽糖", reward: "元氣丹" }, { text: "繼續趕路", reward: "修為" }] },
+            { id: 97, options: [{ text: "拜訪", reward: "無獎勵" }, { text: "自己做火鍋吃", reward: "修為" }] },
+            { id: 98, options: [{ text: "前去參賽", reward: "元氣丹" }, { text: "前去圍觀", reward: "無獎勵" }] },
+            { id: 99, options: [{ text: "跟著去", reward: "無獎勵" }, { text: "選擇放棄", reward: "無獎勵" }] },
+            { id: 100, options: [{ text: "笛子", reward: "修為" }, { text: "飛舟", reward: "無獎勵" }] },
+            { id: 101, options: [{ text: "尋找出路", reward: "無獎勵" }, { text: "靜觀其變", reward: "修為" }] },
+            { id: 102, options: [{ text: "前去昆吾", reward: "幽冥" }, { text: "在家打坐", reward: "無獎勵" }] },
+            { id: 103, options: [{ text: "去山門", reward: "無獎勵" }, { text: "留暗號", reward: "幽冥" }] },
+            { id: 104, options: [{ text: "感悟其道韻", reward: "幽冥" }, { text: "傾聽其聲音", reward: "無獎勵" }] },
+            { id: 105, options: [{ text: "參與夜行", reward: "幽冥" }, { text: "不去參與", reward: "無獎勵" }] },
+            { id: 106, options: [{ text: "前去調查", reward: "無獎勵" }, { text: "不去探查", reward: "無獎勵" }] },
+            { id: 107, options: [{ text: "去逍風城", reward: "幽冥" }, { text: "去星沙城", reward: "無獎勵" }] },
+            { id: 108, options: [{ text: "前去交流", reward: "聚靈丹" }, { text: "前去找寶", reward: "幽冥" }] },
+            { id: 109, options: [{ text: "前去幫忙", reward: "幽冥" }, { text: "不去湊合", reward: "無獎勵" }] },
+            { id: 110, tag: "6/2修正", options: [{ text: "使用後山泉水療傷", reward: "無獎勵" }, { text: "去找藥師", reward: "聚靈丹" }, { text: "檢查日常飲食", reward: "無獎勵" }] },
+            { id: 111, options: [{ text: "尋找破幻之法", reward: "仙工鎬" }, { text: "享受幻境美景", reward: "無獎勵" }] },
+            { id: 112, options: [{ text: "佈置陷阱", reward: "無獎勵" }, { text: "召喚陣法", reward: "仙工鎬" }] },
+            { id: 113, options: [{ text: "避免消滅天機", reward: "仙工鎬" }, { text: "隨意更改未來", reward: "無獎勵" }] },
+            { id: 114, options: [{ text: "加入爭奪", reward: "仙工鎬" }, { text: "遠離紛爭", reward: "無獎勵" }] },
+            { id: 115, tag: "6/2修正", options: [{ text: "借助陣法破霧", reward: "無獎勵" }, { text: "靈力覆蓋雙眼", reward: "無獎勵" }, { text: "原地打坐", reward: "元氣丹" }] },
+            { id: 116, tag: "6/2修正", options: [{ text: "佈置聚靈陣法", reward: "修為" }, { text: "尋找新修煉地", reward: "無獎勵" }, { text: "種植靈植", reward: "無獎勵" }] },
+            { id: 117, tag: "6/2修正", options: [{ text: "開爐查看", reward: "無獎勵" }, { text: "注入靈力壓制", reward: "修為" }, { text: "尋找煉丹大師幫助", reward: "無獎勵" }] },
+            { id: 118, tag: "6/2修正", options: [{ text: "紫金蓮", reward: "無獎勵" }, { text: "虛空草", reward: "無獎勵" }, { text: "三色花", reward: "聚靈丹" }] },
+            { id: 119, tag: "6/2修正", options: [{ text: "尋找時空原點", reward: "無獎勵" }, { text: "逆著時間而上", reward: "修為" }, { text: "等待救援", reward: "無獎勵" }] },
+            { id: 120, options: [{ text: "封印魔力", reward: "無獎勵" }, { text: "引導調和", reward: "修為" }, { text: "查找根源", reward: "無獎勵" }] },
+            { id: 121, options: [{ text: "欣然指點", reward: "無獎勵" }, { text: "共同參悟", reward: "修為" }, { text: "交換心得", reward: "無獎勵" }] },
+            { id: 122, options: [{ text: "服用特殊丹藥", reward: "元氣丹" }, { text: "使用秘法修復", reward: "無獎勵" }, { text: "延期參加", reward: "無獎勵" }] },
+            { id: 123, options: [{ text: "暗黑深淵", reward: "元氣丹" }, { text: "萬魔窟", reward: "無獎勵" }, { text: "魔焰山", reward: "無獎勵" }] },
+            { id: 124, tag: "6/2修正", options: [{ text: "聯手平息叛亂", reward: "無獎勵" }, { text: "深入調查", reward: "聚靈丹" }, { text: "嘗試改造這魔僕", reward: "無獎勵" }] },
+            { id: 125, tag: "6/2修正", options: [{ text: "尋找冷泉", reward: "無獎勵" }, { text: "引導魔血", reward: "無獎勵" }, { text: "閉關修煉", reward: "修為" }] },
+            { id: 126, options: [{ text: "聯手對抗", reward: "無獎勵" }, { text: "誘餌引開", reward: "無獎勵" }, { text: "和平談判", reward: "聚靈丹" }] },
+            { id: 127, tag: "6/2修正", options: [{ text: "加固契約", reward: "無獎勵" }, { text: "解除契約", reward: "無獎勵" }, { text: "尋求平衡", reward: "修為" }] },
+            { id: 128, options: [{ text: "默念經文", reward: "無獎勵" }, { text: "淨化心靈", reward: "無獎勵" }, { text: "打開心結", reward: "修為" }] },
+            { id: 129, options: [{ text: "冒險服用", reward: "無獎勵" }, { text: "直接摧毀", reward: "仙工鎬" }] },
+            { id: 130, options: [{ text: "揭露陰謀", reward: "仙工鎬" }, { text: "暗中觀察", reward: "無獎勵" }] },
+            { id: 131, options: [{ text: "勇敢面對", reward: "仙工鎬" }, { text: "迅速隱藏", reward: "無獎勵" }] },
+            { id: 132, options: [{ text: "穩定丹爐", reward: "無獎勵" }, { text: "放棄挽救", reward: "仙工鎬" }] },
+            { id: 133, options: [{ text: "以道心鎮壓", reward: "無獎勵" }, { text: "求教師尊幫忙", reward: "仙工鎬" }] },
+            { id: 134, options: [{ text: "個人破解", reward: "仙工鎬" }, { text: "尋求幫助", reward: "無獎勵" }] },
+            { id: 135, options: [{ text: "守護靈源", reward: "仙工鎬" }, { text: "立即闖關", reward: "無獎勵" }] },
+            { id: 136, options: [{ text: "深入靈泉", reward: "仙工鎬" }, { text: "摧毀靈泉", reward: "無獎勵" }] },
+            { id: 137, options: [{ text: "用靈力召喚", reward: "無獎勵" }, { text: "用意念召喚", reward: "仙工鎬" }] },
+            { id: 138, options: [{ text: "立刻修煉", reward: "無獎勵" }, { text: "尋找出口", reward: "仙工鎬" }] },
+            { id: 139, options: [{ text: "出關迎戰", reward: "仙工鎬" }, { text: "繼續閉關", reward: "無獎勵" }] },
+            { id: 140, options: [{ text: "出手挽救", reward: "仙工鎬" }, { text: "視而不見", reward: "無獎勵" }] },
+            { id: 141, options: [{ text: "指揮離散", reward: "仙工鎬" }, { text: "低調參與", reward: "無獎勵" }] },
+            { id: 142, options: [{ text: "佔為己有", reward: "仙工鎬" }, { text: "交予宗門", reward: "無獎勵" }] },
+            { id: 143, options: [{ text: "搜索寶物", reward: "無獎勵" }, { text: "修復宗門", reward: "仙工鎬" }] },
+            { id: 144, options: [{ text: "尋找出口", reward: "無獎勵" }, { text: "奮起反擊", reward: "無獎勵" }] },
+            { id: 145, options: [{ text: "研究福澤", reward: "修為" }, { text: "上交福祿", reward: "無獎勵" }] },
+            { id: 146, options: [{ text: "挺身而出", reward: "無獎勵" }, { text: "逃離危險", reward: "修為" }] },
+            { id: 147, options: [{ text: "請他預測", reward: "修為" }, { text: "拒絕預測", reward: "無獎勵" }] },
+            { id: 148, options: [{ text: "採摘仙草", reward: "修為" }, { text: "留下仙草", reward: "無獎勵" }] },
+            { id: 149, options: [{ text: "幫助仙子", reward: "修為" }, { text: "婉言謝絕", reward: "無獎勵" }] },
+            { id: 150, tag: "6/2新增", options: [{ text: "支持一方", reward: "元氣丹" }, { text: "置身事外", reward: "無獎勵" }, { text: "調節矛盾", reward: "無獎勵" }] },
+            { id: 151, tag: "6/2新增", options: [{ text: "驅影符陣", reward: "無獎勵" }, { text: "追溯根源", reward: "無獎勵" }, { text: "以魔制魔", reward: "聚靈丹" }] },
+            { id: 152, tag: "6/2新增", options: [{ text: "放棄煉製", reward: "無獎勵" }, { text: "尋找替代材料", reward: "修為" }, { text: "尋找煉丹大師", reward: "無獎勵" }] },
+            { id: 153, tag: "6/2新增", options: [{ text: "引導歸元", reward: "無獎勵" }, { text: "以毒攻毒", reward: "修為" }, { text: "強行壓制", reward: "無獎勵" }] },
+            { id: 154, tag: "6/2新增", options: [{ text: "召喚更多幫手", reward: "無獎勵" }, { text: "聯手禦敵", reward: "無獎勵" }, { text: "佈置陷阱", reward: "聚靈丹" }] }
+        ];
+
+        const container = document.getElementById('cardsContainer');
+        const ICONS = { night:'☾', mist:'☀', ink:'🌆' };
+        let manualOverride = false;
+        let manualTimer = null;
+
+        function getAutoTheme() {
+            const h = new Date().getHours();
+            if (h < 8)  return 'night';
+            if (h < 16) return 'mist';
+            return 'ink';
+        }
+
+        const BG = { night:'#1a1c23', mist:'#E8F1F8', ink:'#F2EDE3' };
+
+        function applyTheme(theme) {
+            document.documentElement.classList.remove('night','mist','ink');
+            document.documentElement.classList.add(theme);
+            document.body.classList.remove('night','mist','ink');
+            document.body.classList.add(theme);
+            document.body.style.backgroundColor = BG[theme];
+            document.documentElement.style.backgroundColor = BG[theme];
+            updateClock(theme);
+        }
+
+        function updateClock(theme) {
+            const el = document.getElementById('clock-txt');
+            if (!el) return;
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2,'0');
+            const mm = String(now.getMinutes()).padStart(2,'0');
+            el.textContent = ICONS[theme] + ' ' + hh + ':' + mm;
+        }
+
+        function manualSet(theme) {
+            manualOverride = true;
+            applyTheme(theme);
+            if (manualTimer) clearTimeout(manualTimer);
+            manualTimer = setTimeout(() => { manualOverride = false; }, 60 * 60 * 1000);
+        }
+
+        function checkTime() {
+            const cur = document.body.classList.contains('night') ? 'night'
+                      : document.body.classList.contains('mist')  ? 'mist' : 'ink';
+            updateClock(cur);
+            if (!manualOverride) {
+                const auto = getAutoTheme();
+                if (auto !== cur) applyTheme(auto);
+            }
+        }
+
+        applyTheme(getAutoTheme());
+        setInterval(checkTime, 30000);
+
+        function renderCards(data) {
+            container.innerHTML = '';
+            if (!data.length) {
+                container.innerHTML = '<div style="text-align:center;padding:48px 0;font-size:14px;color:#64748b">🔮 查無此機緣，請換個關鍵字試試。</div>';
+                return;
+            }
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const cols = item.options.length === 3 ? 'repeat(3,1fr)' : 'repeat(2,1fr)';
+                let html = `<div style="display:flex;align-items:center;margin-bottom:4px">
+                    <span class="card-num">#${item.id}</span>
+                    ${item.tag ? `<span class="card-tag">${item.tag}</span>` : ''}
+                </div>
+                <div style="display:grid;grid-template-columns:${cols};gap:8px">`;
+                item.options.forEach(opt => {
+                    html += `<div class="opt-cell r-${opt.reward}">
+                        <span class="opt-text">${opt.text}</span>
+                        <span class="opt-badge">${opt.reward}</span>
+                    </div>`;
+                });
+                html += '</div>';
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+            document.getElementById('totalBadge').textContent = `共 ${data.length} 筆`;
+        }
+
+        renderCards(rawData);
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const q = e.target.value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearBtn');
+            clearBtn.classList.toggle('visible', q.length > 0);
+            renderCards(!q ? rawData : rawData.filter(item =>
+                String(item.id).includes(q) ||
+                item.options.some(o => o.text.toLowerCase().includes(q) || o.reward.toLowerCase().includes(q)) ||
+                (item.tag && item.tag.toLowerCase().includes(q))
+            ));
+            if (q.length > 0) {
+                requestAnimationFrame(() => {
+                    const headerH = document.querySelector('.header').offsetHeight;
+                    const top = document.getElementById('cardsContainer').getBoundingClientRect().top + window.scrollY - headerH - 8;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                });
+            }
+        });
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            document.getElementById('clearBtn').classList.remove('visible');
+            renderCards(rawData);
+        }
+
+        function filterReward(type) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('fb-' + (type === 'all' ? 'all' : type)).classList.add('active');
+            renderCards(type === 'all' ? rawData : rawData.filter(item => item.options.some(o => o.reward === type)));
+        }
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollTopBtn').style.display = window.scrollY > 400 ? 'flex' : 'none';
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => { e.preventDefault(); alert('🔮 天機不可外洩！本寶典內容禁止複製。'); });
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if ((e.ctrlKey||e.metaKey) && e.shiftKey && 'ij'.includes(e.key.toLowerCase())) { e.preventDefault(); return false; }
+            if ((e.ctrlKey||e.metaKey) && 'us'.includes(e.key.toLowerCase())) { e.preventDefault(); return false; }
+        });
+        setInterval(function() {
+            const t0 = performance.now(); debugger; const t1 = performance.now();
+            if (t1 - t0 > 100) document.body.innerHTML = '<h1>⚠️ 偵測到意圖窺探天機之舉，防禦陣法已啟動！請關閉開發者工具並重新整理網頁。</h1>';
+        }, 1000);
+
+        // ── 語音搜尋 ──
+        let recognition = null;
+        let isListening = false;
+
+        function toggleVoice() {
+            const btn = document.getElementById('micBtn');
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('此裝置不支援語音輸入');
+                return;
+            }
+            if (isListening) {
+                recognition.stop();
+                return;
+            }
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SR();
+            recognition.lang = 'zh-TW';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isListening = true;
+                btn.classList.add('listening');
+                btn.textContent = '🔴';
+            };
+            recognition.onresult = (e) => {
+                const transcript = e.results[0][0].transcript;
+                const inp = document.getElementById('searchInput');
+                inp.value = transcript;
+                inp.dispatchEvent(new Event('input'));
+                document.getElementById('clearBtn').classList.add('visible');
+            };
+            recognition.onend = () => {
+                isListening = false;
+                btn.classList.remove('listening');
+                btn.textContent = '🎙️';
+            };
+            recognition.onerror = (e) => {
+                isListening = false;
+                btn.classList.remove('listening');
+                btn.textContent = '🎙️';
+            };
+            recognition.start();
+        }
+
+function getTheme(){const cl=document.documentElement.classList;return cl.contains('night')?'night':cl.contains('mist')?'mist':'ink';}
+function cyclePillTheme(){
+  const order=['night','mist','ink'];
+  const cur=getTheme();
+  const next=order[(order.indexOf(cur)+1)%order.length];
+  manualSet(next);
+}
+</script>
+</body>
+</html>

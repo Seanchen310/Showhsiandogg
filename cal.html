@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=c657b0aa-c653-4f31-a417-5d203649f8ed
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>修仙小幫狗 · 修為速算</title>
+<script>
+(function(){
+  var h=new Date().getHours();
+  var t=h<8?'night':h<16?'mist':'ink';
+  var bg={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
+  document.documentElement.className=t;
+  document.documentElement.style.backgroundColor=bg[t];
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+html,body{overflow-x:hidden;max-width:100vw;}
+html{background:#1a1c23;}html.mist{background:#E8F1F8;}html.ink{background:#F2EDE3;}
+body{background:transparent;min-height:100vh;margin:0;padding:0;
+  -webkit-user-select:none;-moz-user-select:none;user-select:none;
+  transition:background-color 1.4s ease,color 1.4s ease;}
+input,select{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;transition:opacity 1.4s ease;}
+.night::before{opacity:0;}
+.mist::before{background-image:radial-gradient(ellipse at 15% 0%,rgba(120,180,220,0.22) 0%,transparent 45%),radial-gradient(ellipse at 85% 100%,rgba(100,160,200,0.18) 0%,transparent 45%);}
+.ink::before{background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(139,110,60,0.06) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(139,110,60,0.04) 40px);}
+html.night,.night{background-color:#1a1c23;color:#e2e8f0;}
+html.mist,.mist{background-color:#E8F1F8;color:#1E3D52;}
+html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
+.night{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+.mist,.ink{font-family:'Noto Serif TC',serif;}
+
+/* ── Header ── */
+.header{backdrop-filter:blur(8px);position:sticky;top:0;z-index:50;padding:14px 20px 12px;transition:background 1.4s ease,border-color 1.4s ease;}
+.night .header{background:rgba(15,17,26,0.85);border-bottom:1px solid #2d3748;}
+.mist  .header{background:rgba(232,241,248,0.92);border-bottom:1px solid #B0CCE0;}
+.ink   .header{background:rgba(242,237,227,0.92);border-bottom:1px solid #C9B99A;}
+
+.site-title{font-size:22px;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.night .site-title{font-family:serif;background:linear-gradient(to right,#fef08a,#fbbf24,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.night .site-title .emoji{-webkit-text-fill-color:initial;background:none;}
+.mist  .site-title{font-family:'Noto Serif TC',serif;color:#1E3D52;-webkit-text-fill-color:#1E3D52;}
+.ink   .site-title{font-family:'Noto Serif TC',serif;color:#3D2B1A;-webkit-text-fill-color:#3D2B1A;}
+.title-sub{font-size:12px;transition:color 1.4s ease;}
+.night .title-sub{color:#78716c;font-family:serif;font-weight:500;}
+.mist  .title-sub{color:#4A7090;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
+.ink   .title-sub{color:#7A5C3A;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
+
+.content{padding:20px 20px 120px;max-width:600px;margin:0 auto;position:relative;z-index:1;}
+.sec-label{font-size:13px;margin-bottom:10px;letter-spacing:.06em;transition:color 1.4s ease;}
+.night .sec-label{color:#94a3b8;}.mist .sec-label{color:#4A7090;}.ink .sec-label{color:#7A5C3A;}
+
+/* ── Realm grid ── */
+.realm-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:14px;}
+.realm-btn{border-radius:14px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;text-align:center;padding:10px 2px;transition:all .2s;line-height:1;}
+.night .realm-btn{background:rgba(36,39,49,0.95);outline:1px solid #2d3748;color:#8899bb;}
+.night .realm-btn.on{background:#0e4a35;outline:1px solid #1D9E75;color:#fff;}
+.mist  .realm-btn{background:rgba(250,253,255,0.95);outline:.5px solid #C2D8E8;color:#2A5878;}
+.mist  .realm-btn.on{background:#1E3D52;outline-color:#1E3D52;color:#E8F4FC;}
+.ink   .realm-btn{background:rgba(255,251,242,0.95);outline:.5px solid #C9B99A;color:#5C4030;}
+.ink   .realm-btn.on{background:#3D2B1A;outline-color:#3D2B1A;color:#F2EDE3;}
+
+/* ── 選後大卡 ── */
+.realm-selected-row{display:flex;gap:8px;margin-bottom:14px;}
+.realm-selected-card{flex:2;border-radius:30px;padding:14px 18px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:all .2s;}
+.night .realm-selected-card{background:#0e4a35;outline:1px solid #1D9E75;}
+.mist  .realm-selected-card{background:#1E3D52;outline:1px solid #1E3D52;}
+.ink   .realm-selected-card{background:#3D2B1A;outline:1px solid #3D2B1A;}
+.rsc-lv{font-size:11px;opacity:.5;margin-bottom:2px;text-align:center;}
+.rsc-name{font-size:22px;font-weight:700;text-align:center;letter-spacing:.03em;}
+.rsc-hint{font-size:11px;opacity:.35;text-align:center;margin-top:4px;}
+.night .rsc-lv,.night .rsc-name,.night .rsc-hint{color:#fff;}
+.mist  .rsc-lv,.mist  .rsc-name,.mist  .rsc-hint{color:#E8F4FC;}
+.ink   .rsc-lv,.ink   .rsc-name,.ink   .rsc-hint{color:#F2EDE3;}
+.stage-selected-card{flex:3;border-radius:30px;padding:14px 18px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:all .2s;}
+.ssc-label{font-size:11px;opacity:.5;margin-bottom:2px;text-align:center;}
+.ssc-stage{font-size:22px;font-weight:700;text-align:center;letter-spacing:.03em;}
+.ssc-amount{font-size:13px;opacity:.6;margin-top:3px;text-align:center;}
+.ssc-hint{font-size:11px;opacity:.35;text-align:center;margin-top:4px;}
+.stage-selected-card.s0{background:#1a2535;}
+.stage-selected-card.s0 .ssc-label,.stage-selected-card.s0 .ssc-stage,.stage-selected-card.s0 .ssc-amount,.stage-selected-card.s0 .ssc-hint{color:#7eb8f7;}
+.night .stage-selected-card.s0{outline:1px solid #2d4a6e;}
+.mist  .stage-selected-card.s0{outline:1px solid #2d4a6e;}
+.ink   .stage-selected-card.s0{outline:1px solid #2d4a6e;}
+.stage-selected-card.s1{background:#1e2535;}
+.stage-selected-card.s1 .ssc-label,.stage-selected-card.s1 .ssc-stage,.stage-selected-card.s1 .ssc-amount,.stage-selected-card.s1 .ssc-hint{color:#b8a7f7;}
+.night .stage-selected-card.s1{outline:1px solid #3d3a6e;}
+.mist  .stage-selected-card.s1{outline:1px solid #3d3a6e;}
+.ink   .stage-selected-card.s1{outline:1px solid #3d3a6e;}
+.stage-selected-card.s2{background:#251a35;}
+.stage-selected-card.s2 .ssc-label,.stage-selected-card.s2 .ssc-stage,.stage-selected-card.s2 .ssc-amount,.stage-selected-card.s2 .ssc-hint{color:#e8a7f7;}
+.night .stage-selected-card.s2{outline:1px solid #5a2d6e;}
+.mist  .stage-selected-card.s2{outline:1px solid #5a2d6e;}
+.ink   .stage-selected-card.s2{outline:1px solid #5a2d6e;}
+
+/* ── Stage pills ── */
+.stage-row{display:flex;gap:6px;margin-bottom:20px;}
+.stage-btn{flex:1;padding:10px 4px;border-radius:30px;cursor:pointer;font-size:14px;transition:all .2s;font-family:inherit;border:none;font-weight:500;text-align:center;}
+.stage-btn .sq{font-size:11px;opacity:.6;margin-top:3px;font-weight:400;display:block;}
+.night .stage-btn{background:rgba(36,39,49,0.95);outline:1px solid #2d3748;color:#64748b;}
+.night .stage-btn.s0.on{outline:1px solid #2d4a6e;background:#1a2535;color:#7eb8f7;}
+.night .stage-btn.s1.on{outline:1px solid #3d3a6e;background:#1e2535;color:#b8a7f7;}
+.night .stage-btn.s2.on{outline:1px solid #5a2d6e;background:#251a35;color:#e8a7f7;}
+.mist  .stage-btn{background:rgba(250,253,255,0.95);outline:.5px solid #C2D8E8;color:#4A7090;}
+.mist  .stage-btn.s0.on{background:#1a2535;outline-color:#2d4a6e;color:#7eb8f7;}
+.mist  .stage-btn.s1.on{background:#1e2535;outline-color:#3d3a6e;color:#b8a7f7;}
+.mist  .stage-btn.s2.on{background:#251a35;outline-color:#5a2d6e;color:#e8a7f7;}
+.ink   .stage-btn{background:rgba(255,251,242,0.95);outline:.5px solid #C9B99A;color:#7A5C3A;}
+.ink   .stage-btn.s0.on{background:#1a2535;outline-color:#2d4a6e;color:#7eb8f7;}
+.ink   .stage-btn.s1.on{background:#1e2535;outline-color:#3d3a6e;color:#b8a7f7;}
+.ink   .stage-btn.s2.on{background:#251a35;outline-color:#5a2d6e;color:#e8a7f7;}
+
+/* ── Input cards ── */
+.input-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.input-card{border-radius:12px;padding:12px 14px;transition:all 1.4s ease;}
+.night .input-card{background:rgba(36,39,49,0.95);outline:1px solid #2d3748;}
+.mist  .input-card{background:rgba(250,253,255,0.95);outline:.5px solid #C2D8E8;}
+.ink   .input-card{background:rgba(255,251,242,0.95);outline:.5px solid #C9B99A;}
+.night .input-card:focus-within{outline-color:#f59e0b;}
+.mist  .input-card:focus-within{outline-color:#5BA3C9;}
+.ink   .input-card:focus-within{outline-color:#B8860B;}
+.input-card-label{font-size:12px;margin-bottom:6px;letter-spacing:.03em;transition:color 1.4s ease;}
+.night .input-card-label{color:#64748b;}.mist .input-card-label{color:#4A7090;}.ink .input-card-label{color:#7A5C3A;}
+.input-card-row{display:flex;align-items:baseline;gap:4px;}
+.input-card input{flex:1;background:transparent;border:none;outline:none;font-family:inherit;font-size:20px;font-weight:600;width:100%;min-width:0;padding:0;transition:color 1.4s ease;}
+.night .input-card input{color:#e2e8f0;}.night .input-card input::placeholder{color:#2d3748;}
+.mist  .input-card input{color:#1E3D52;}.mist  .input-card input::placeholder{color:#B0CCE0;}
+.ink   .input-card input{color:#3D2B1A;}.ink   .input-card input::placeholder{color:#C9B99A;}
+.input-card-unit{font-size:12px;white-space:nowrap;flex-shrink:0;transition:color 1.4s ease;}
+.night .input-card-unit{color:#475569;}.mist .input-card-unit{color:#6090A8;}.ink .input-card-unit{color:#9A7A5A;}
+
+/* ── Fold toggle ── */
+.fold-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;margin-bottom:8px;background:none;border:none;font-family:inherit;padding:4px 0;width:100%;}
+.fold-toggle-label{font-size:14px;transition:color 1.4s ease;}
+.night .fold-toggle-label{color:#64748b;}.mist .fold-toggle-label{color:#4A7090;}.ink .fold-toggle-label{color:#7A5C3A;}
+.fold-arrow{font-size:12px;transition:transform .2s;}
+.fold-arrow.open{transform:rotate(180deg);}
+.night .fold-arrow{color:#475569;}.mist .fold-arrow{color:#6090A8;}.ink .fold-arrow{color:#9A7A5A;}
+.fold-section{overflow:hidden;max-height:0;transition:max-height .3s ease;}
+.fold-section.open{max-height:500px;}
+
+/* ── Challenge widget ── */
+.challenge-lv-select{background:transparent;border:none;outline:none;font-family:inherit;font-size:15px;font-weight:600;width:100%;cursor:pointer;padding:0;margin-top:2px;appearance:none;-webkit-appearance:none;transition:color 1.4s ease;}
+.night .challenge-lv-select{color:#e2e8f0;}.mist .challenge-lv-select{color:#1E3D52;}.ink .challenge-lv-select{color:#3D2B1A;}
+.challenge-total{font-size:13px;padding:8px 12px;border-radius:8px;margin-bottom:4px;transition:all 1.4s ease;}
+.night .challenge-total{background:rgba(52,211,153,0.08);color:#34d399;}
+.mist  .challenge-total{background:rgba(26,96,64,0.08);color:#1A6040;}
+.ink   .challenge-total{background:rgba(45,92,30,0.08);color:#2D5C1E;}
+
+/* ── Progress arc ── */
+.prog-section{margin-bottom:20px;}
+.arc-row{display:flex;align-items:center;gap:16px;}
+.arc-wrap{position:relative;width:100px;height:62px;flex-shrink:0;}
+.arc-wrap svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.arc-center{position:absolute;bottom:2px;left:0;right:0;text-align:center;}
+.arc-pct{font-size:20px;font-weight:700;line-height:1;}
+.arc-sub{font-size:9px;margin-top:1px;}
+.night .arc-pct{color:#1D9E75;}.mist .arc-pct{color:#1A6040;}.ink .arc-pct{color:#2D5C1E;}
+.night .arc-sub{color:#6b7a99;}.mist .arc-sub{color:#4A7090;}.ink .arc-sub{color:#7A5C3A;}
+.prog-bars{flex:1;display:flex;flex-direction:column;gap:10px;}
+.prog-row-top{display:flex;justify-content:space-between;margin-bottom:4px;font-size:11px;}
+.plabel{transition:color 1.4s ease;}
+.night .plabel{color:#94a3b8;}.mist .plabel{color:#4A7090;}.ink .plabel{color:#7A5C3A;}
+.prog-track{height:5px;border-radius:999px;overflow:hidden;transition:background 1.4s ease;}
+.night .prog-track{background:rgba(255,255,255,0.07);}
+.mist  .prog-track{background:rgba(91,163,201,0.15);}
+.ink   .prog-track{background:rgba(192,153,100,0.15);}
+.prog-fill{height:100%;border-radius:999px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+/* ── Ticket card ── */
+.ticket-card{border-radius:14px;padding:16px 18px;margin-bottom:8px;transition:all 1.4s ease;}
+.night .ticket-card{background:rgba(29,158,117,0.10);outline:1px solid rgba(29,158,117,0.4);}
+.mist  .ticket-card{background:#E4F4EC;outline:.5px solid #90CCA8;}
+.ink   .ticket-card{background:#E8F2E4;outline:.5px solid #8DC07C;}
+.ticket-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.ticket-left{flex:1;}
+.ticket-badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:4px;margin-bottom:6px;transition:all 1.4s ease;}
+.night .ticket-badge{background:rgba(29,158,117,0.2);color:#34d399;}
+.mist  .ticket-badge{background:rgba(26,96,64,0.1);color:#1A6040;}
+.ink   .ticket-badge{background:rgba(45,92,30,0.1);color:#2D5C1E;}
+.ticket-realm{font-size:15px;font-weight:500;margin-bottom:3px;transition:color 1.4s ease;}
+.night .ticket-realm{color:#e2e8f0;}.mist .ticket-realm{color:#1E3D52;}.ink .ticket-realm{color:#3D2B1A;}
+.ticket-wait{font-size:14px;transition:color 1.4s ease;}
+.night .ticket-wait{color:#64748b;}.mist .ticket-wait{color:#4A7090;}.ink .ticket-wait{color:#7A5C3A;}
+.ticket-wait b{transition:color 1.4s ease;}
+.night .ticket-wait b{color:#e2e8f0;}.mist .ticket-wait b{color:#1E3D52;}.ink .ticket-wait b{color:#3D2B1A;}
+.ticket-right{text-align:right;flex-shrink:0;}
+.ticket-day{font-size:13px;margin-bottom:3px;transition:color 1.4s ease;}
+.night .ticket-day{color:#6b7a99;}.mist .ticket-day{color:#4A7090;}.ink .ticket-day{color:#7A5C3A;}
+.ticket-time{font-size:42px;font-weight:700;letter-spacing:.03em;line-height:1;transition:color 1.4s ease;}
+.night .ticket-time{color:#34d399;}.mist .ticket-time{color:#1A6040;}.ink .ticket-time{color:#2D5C1E;}
+.ticket-divider{height:.5px;margin:12px 0;transition:background 1.4s ease;}
+.night .ticket-divider{background:rgba(29,158,117,0.25);}
+.mist  .ticket-divider{background:rgba(144,204,168,0.4);}
+.ink   .ticket-divider{background:rgba(141,192,124,0.4);}
+.ticket-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;}
+.ticket-hints{display:flex;flex-direction:column;gap:3px;}
+.ticket-hint-row{font-size:13px;display:flex;align-items:center;gap:4px;transition:color 1.4s ease;}
+.night .ticket-hint-row{color:#22d3ee;}.mist .ticket-hint-row{color:#0C6890;}.ink .ticket-hint-row{color:#1E4A6C;}
+.ticket-mamo{font-size:12px;transition:color 1.4s ease;}
+.night .ticket-mamo{color:#475569;}.mist .ticket-mamo{color:#6090A8;}.ink .ticket-mamo{color:#9A7A5A;}
+
+/* ── Between-session challenge ── */
+.between-challenge{border-radius:12px;padding:12px 14px;margin:8px 0;transition:all 1.4s ease;}
+.night .between-challenge{background:rgba(255,255,255,0.03);outline:1px solid #2d3748;}
+.mist  .between-challenge{background:rgba(250,253,255,0.7);outline:.5px solid #C2D8E8;}
+.ink   .between-challenge{background:rgba(255,251,242,0.7);outline:.5px solid #C9B99A;}
+.between-challenge .fold-toggle{margin-bottom:0;}
+
+/* ── Timeline ── */
+.timeline{display:flex;flex-direction:column;}
+.tl-item{display:flex;gap:10px;padding:2px 0;}
+.tl-spine{display:flex;flex-direction:column;align-items:center;width:16px;flex-shrink:0;padding-top:6px;}
+.tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all 1.4s ease;}
+.night .tl-dot{background:#2d3748;outline:1.5px solid #475569;}
+.mist  .tl-dot{background:#C2D8E8;outline:1.5px solid #90B8D0;}
+.ink   .tl-dot{background:#C9B99A;outline:1.5px solid #A8926A;}
+.tl-line{width:1px;flex:1;margin-top:3px;transition:background 1.4s ease;}
+.night .tl-line{background:#2d3748;}.mist .tl-line{background:#C2D8E8;}.ink .tl-line{background:#C9B99A;}
+.tl-card{flex:1;border-radius:10px;padding:11px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:all 1.4s ease;}
+.night .tl-card{background:rgba(36,39,49,0.95);outline:1px solid #2d3748;}
+.mist  .tl-card{background:rgba(250,253,255,0.95);outline:.5px solid #C2D8E8;}
+.ink   .tl-card{background:rgba(255,251,242,0.95);outline:.5px solid #C9B99A;}
+.tl-num{font-size:12px;margin-bottom:2px;transition:color 1.4s ease;}
+.night .tl-num{color:#475569;}.mist .tl-num{color:#6090A8;}.ink .tl-num{color:#9A7A5A;}
+.tl-realm{font-size:14px;font-weight:500;margin-bottom:2px;transition:color 1.4s ease;}
+.night .tl-realm{color:#94a3b8;}.mist .tl-realm{color:#2A5878;}.ink .tl-realm{color:#5C4030;}
+.tl-wait{font-size:13px;transition:color 1.4s ease;}
+.night .tl-wait{color:#64748b;}.mist .tl-wait{color:#4A7090;}.ink .tl-wait{color:#7A5C3A;}
+.tl-wait b{transition:color 1.4s ease;}
+.night .tl-wait b{color:#c8d0e0;}.mist .tl-wait b{color:#1E3D52;}.ink .tl-wait b{color:#3D2B1A;}
+.tl-right{text-align:right;flex-shrink:0;}
+.tl-day{font-size:12px;margin-bottom:1px;transition:color 1.4s ease;}
+.night .tl-day{color:#475569;}.mist .tl-day{color:#6090A8;}.ink .tl-day{color:#9A7A5A;}
+.tl-clock{font-size:20px;font-weight:700;letter-spacing:.02em;transition:color 1.4s ease;}
+.night .tl-clock{color:#7eb8f7;}.mist .tl-clock{color:#0C447C;}.ink .tl-clock{color:#1E3D5C;}
+
+/* ── Nope / Empty ── */
+.nope-card{border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all 1.4s ease;}
+.night .nope-card{background:rgba(127,29,29,0.15);outline:1px solid rgba(180,60,60,0.35);}
+.mist  .nope-card{background:#FDECEA;outline:.5px solid #D89898;}
+.ink   .nope-card{background:#FDECEA;outline:.5px solid #D98080;}
+.nope-title{font-size:15px;font-weight:600;margin-bottom:3px;transition:color 1.4s ease;}
+.night .nope-title{color:#fb7185;}.mist .nope-title{color:#8C2018;}.ink .nope-title{color:#8C2918;}
+.nope-sub{font-size:13px;transition:color 1.4s ease;}
+.night .nope-sub{color:#64748b;}.mist .nope-sub{color:#4A7090;}.ink .nope-sub{color:#7A5C3A;}
+.empty-hint{text-align:center;padding:32px 0;font-size:15px;transition:color 1.4s ease;}
+.night .empty-hint{color:#475569;}.mist .empty-hint{color:#6090A8;}.ink .empty-hint{color:#9A7A5A;}
+
+        #bottom-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:2px;z-index:100;padding:6px 8px;border-radius:999px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 1.4s ease;}
+.night #bottom-bar{background:rgba(10,14,20,0.92);border:0.5px solid rgba(255,255,255,0.1);}
+.mist  #bottom-bar{background:rgba(232,241,248,0.92);border:.5px solid #B0CCE0;}
+.ink   #bottom-bar{background:rgba(242,237,227,0.92);border:.5px solid #C9B99A;}
+#clock-txt{font-size:11px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
+.night #clock-txt{color:#f59e0b;}
+.mist  #clock-txt{color:#1E3D52;}
+.ink   #clock-txt{color:#3D2B1A;}
+.p-sep{width:0.5px;height:14px;margin:0 4px;transition:background 1.4s ease;}
+.night .p-sep{background:rgba(255,255,255,0.08);}
+.mist  .p-sep{background:#C2D8E8;}
+.ink   .p-sep{background:#C9B99A;}
+#theme-cycle{width:10px;height:10px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:all .25s;flex-shrink:0;margin:0 4px;}
+.night #theme-cycle{border-color:rgba(245,158,11,0.5);}
+.mist  #theme-cycle{border-color:#5BA3C9;}
+.ink   #theme-cycle{border-color:#B8860B;}
+.p-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 7px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.p-tab-icon{font-size:15px;transition:color 1.4s ease;}
+.p-tab-label{font-size:8px;white-space:nowrap;transition:color 1.4s ease;}
+.night .p-tab-icon,.night .p-tab-label{color:#374151;}
+.night .p-tab.on .p-tab-icon,.night .p-tab.on .p-tab-label{color:#f59e0b;}
+.mist  .p-tab-icon,.mist  .p-tab-label{color:#90B8D0;}
+.mist  .p-tab.on .p-tab-icon,.mist  .p-tab.on .p-tab-label{color:#1E3D52;}
+.ink   .p-tab-icon,.ink   .p-tab-label{color:#C9B99A;}
+.ink   .p-tab.on .p-tab-icon,.ink   .p-tab.on .p-tab-label{color:#3D2B1A;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div>
+      <h1 class="site-title" style="font-size:20px;margin:0 0 2px 0;display:flex;align-items:center;gap:8px">
+        <span class="emoji">🐶</span> 修仙小幫狗
+      </h1>
+      <h3 class="site-title" style="font-size:15px;margin:0 0 4px 0;letter-spacing:.08em"><span class="emoji">⚡</span> 修為速算</h3>
+      <div class="title-sub">掐指一算，論道場次盡在掌握。</div>
+    </div>
+  </div>
+</header>
+
+<div class="content">
+  <div class="sec-label">當前境界</div>
+  <div id="realm-grid-wrap">
+    <div class="realm-grid" id="realm-grid"></div>
+  </div>
+  <div id="realm-selected-wrap" style="display:none;">
+    <div class="realm-selected-row">
+      <div class="realm-selected-card" onclick="resetRealm()">
+        <div class="rsc-lv" id="rsc-lv"></div>
+        <div class="rsc-name" id="rsc-name"></div>
+        <div class="rsc-hint">點此重選</div>
+      </div>
+      <div class="stage-selected-card" id="stage-selected-card" onclick="resetStage()" style="display:none;">
+        <div class="ssc-label">細分期</div>
+        <div class="ssc-stage" id="ssc-stage"></div>
+        <div class="ssc-amount" id="ssc-amount"></div>
+        <div class="ssc-hint">點此重選</div>
+      </div>
+    </div>
+    <div class="stage-row" id="stage-row" style="display:none;"></div>
+  </div>
+
+  <div class="input-cards">
+    <div class="input-card">
+      <div class="input-card-label">當前細分期累積修為</div>
+      <div class="input-card-row">
+        <input type="number" id="inp-current" placeholder="0" min="0" oninput="calc()">
+        <span class="input-card-unit">修為</span>
+      </div>
+    </div>
+    <div class="input-card">
+      <div class="input-card-label">修煉速度</div>
+      <div class="input-card-row">
+        <input type="number" id="inp-speed" placeholder="0" min="0" oninput="calc()">
+        <span class="input-card-unit">修為/秒</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 元氣丹 & 挑戰帖 同一行 -->
+  <div style="display:flex;gap:8px;margin-bottom:4px;">
+    <button class="fold-toggle" onclick="togglePill()" style="flex:1;margin-bottom:0;">
+      <span>💊</span>
+      <span class="fold-toggle-label">打算吃元氣丹</span>
+      <span class="fold-arrow" id="pill-arrow">▼</span>
+    </button>
+    <button class="fold-toggle" onclick="toggleChallenge(0)" style="flex:1;margin-bottom:0;">
+      <span>⚔️</span>
+      <span class="fold-toggle-label">打算用挑戰帖</span>
+      <span class="fold-arrow" id="ch-arrow-0">▼</span>
+    </button>
+  </div>
+  <div class="fold-section" id="pill-section">
+    <div class="input-cards" style="margin-bottom:12px;">
+      <div class="input-card" style="grid-column:span 2;">
+        <div class="input-card-label">元氣丹可補回的修為</div>
+        <div class="input-card-row">
+          <input type="number" id="inp-pill" placeholder="0" min="0" oninput="calc()">
+          <span class="input-card-unit">修為</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fold-section" id="ch-section-0">
+    <div id="ch-widget-0"></div>
+  </div>
+
+  <div id="prog-section" style="display:none;" class="prog-section"></div>
+  <div id="result-section"><div class="empty-hint">填入修為與速度後顯示場次</div></div>
+</div>
+
+<div id="bottom-bar">
+  <span id="clock-txt">☾ 00:00</span>
+  <div class="p-sep"></div>
+  <div id="theme-cycle" onclick="cyclePillTheme()" title="切換主題"></div>
+  <div class="p-sep"></div>
+  <a href="index.html" class="p-tab">
+    <span class="p-tab-icon">🏠</span>
+    <span class="p-tab-label">首頁</span>
+  </a>
+  <a href="quiz-adv.html" class="p-tab">
+    <span class="p-tab-icon">📖</span>
+    <span class="p-tab-label">奇遇</span>
+  </a>
+  <a href="cal.html" class="p-tab on">
+    <span class="p-tab-icon">⚡</span>
+    <span class="p-tab-label">修為</span>
+  </a>
+  <a href="contact.html" class="p-tab">
+    <span class="p-tab-icon">✉️</span>
+    <span class="p-tab-label">聯絡</span>
+  </a>
+</div>
+</div>
+
+<script>
+const REALMS=[
+  {lv:1, name:"凡人",  name2:null,  stages:[15,25,50]},
+  {lv:2, name:"煉氣",  name2:null,  stages:[100,400,900]},
+  {lv:3, name:"築基",  name2:null,  stages:[5400,13000,24150]},
+  {lv:4, name:"結丹",  name2:null,  stages:[25000,26770,44625]},
+  {lv:5, name:"元嬰",  name2:null,  stages:[48825,51240,54915]},
+  {lv:6, name:"出竅",  name2:null,  stages:[56490,59325,61950]},
+  {lv:7, name:"化神",  name2:null,  stages:[65415,68670,72135]},
+  {lv:8, name:"合體",  name2:null,  stages:[75705,79485,166950]},
+  {lv:9, name:"洞虛",  name2:null,  stages:[175350,183750,193200]},
+  {lv:10,name:"大乘",  name2:null,  stages:[202965,213150,223650]},
+  {lv:11,name:"渡劫",  name2:null,  stages:[262500,283500,315000]},
+  {lv:12,name:"人仙",  name2:"人魔", stages:[1050000,861000,903000]},
+  {lv:13,name:"真仙",  name2:"赤魔", stages:[924000,945000,950985]},
+  {lv:14,name:"金仙",  name2:"幽魔", stages:[968100,985530,1003275]},
+  {lv:15,name:"上仙",  name2:"冥魔", stages:[1020000,1039500,1058442]},
+  {lv:16,name:"仙君",  name2:"魔王", stages:[2520000,1890000,1942500]},
+  {lv:17,name:"仙尊",  name2:"魔尊", stages:[2047500,2252250,2478000]},
+  {lv:18,name:"仙帝",  name2:"魔皇", stages:[6300000,7035000,7035000]},
+];
+const CHALLENGE_LOOT=[
+  {lv:1,  name:"Lv.1 凡人",       amount:15},
+  {lv:2,  name:"Lv.2 煉氣",       amount:100},
+  {lv:3,  name:"Lv.3 築基",       amount:800},
+  {lv:4,  name:"Lv.4 結丹",       amount:1000},
+  {lv:5,  name:"Lv.5 元嬰",       amount:1500},
+  {lv:6,  name:"Lv.6 出竅",       amount:2000},
+  {lv:7,  name:"Lv.7 化神",       amount:3000},
+  {lv:8,  name:"Lv.8 合體",       amount:4000},
+  {lv:9,  name:"Lv.9 洞虛",       amount:5000},
+  {lv:10, name:"Lv.10 大乘",      amount:6000},
+  {lv:11, name:"Lv.11 渡劫",      amount:8000},
+  {lv:12, name:"Lv.12 人仙/人魔", amount:20000},
+  {lv:13, name:"Lv.13 真仙/赤魔", amount:25000},
+  {lv:14, name:"Lv.14 金仙/幽魔", amount:28000},
+  {lv:15, name:"Lv.15 上仙/冥魔", amount:30000},
+  {lv:16, name:"Lv.16 仙君/魔王", amount:45000},
+  {lv:17, name:"Lv.17 仙尊/魔尊", amount:60000},
+  {lv:18, name:"Lv.18 仙帝/魔皇", amount:100000},
+];
+const SLABELS=["前期","中期","後期"];
+const ICONS={night:'☾',mist:'☀',ink:'🌆'};
+const BG={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
+let ri=0,si=-1,pillOpen=false;
+// 每場挑戰帖狀態：ch[sessionIdx] = {open, open2, count1, lv1, count2, lv2}
+const ch={};
+// 每場元氣丹狀態：pill[sessionIdx] = {open, amount}
+const pillS={};
+let manualOverride=false,manualTimer=null;
+
+// ── Theme ──
+function getTheme(){return document.documentElement.classList.contains('night')?'night':document.documentElement.classList.contains('mist')?'mist':'ink';}
+function getAutoTheme(){const h=new Date().getHours();return h<8?'night':h<16?'mist':'ink';}
+function applyTheme(t){
+  ['night','mist','ink'].forEach(c=>{document.documentElement.classList.remove(c);document.body.classList.remove(c);});
+  document.documentElement.classList.add(t);document.body.classList.add(t);
+  document.body.style.backgroundColor=BG[t];document.documentElement.style.backgroundColor=BG[t];
+  updateClock(t);
+}
+function updateClock(t){
+  const n=new Date(),hh=String(n.getHours()).padStart(2,'0'),mm=String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('clock-txt').textContent=ICONS[t]+' '+hh+':'+mm;
+}
+function checkTime(){updateClock(getTheme());if(!manualOverride){const a=getAutoTheme();if(a!==getTheme())applyTheme(a);}}
+applyTheme(getAutoTheme());
+setInterval(checkTime,30000);
+
+// ── 折疊 ──
+function togglePill(){
+  pillOpen=!pillOpen;
+  document.getElementById('pill-section').classList.toggle('open',pillOpen);
+  document.getElementById('pill-arrow').classList.toggle('open',pillOpen);
+  if(!pillOpen){document.getElementById('inp-pill').value='';calc();}
+}
+function getPillBonus(idx){
+  if(idx===0){return parseFloat(document.getElementById('inp-pill').value)||0;}
+  if(!pillS[idx]||!pillS[idx].open)return 0;
+  return parseFloat(pillS[idx].amount)||0;
+}
+function togglePillS(idx){
+  if(!pillS[idx])pillS[idx]={open:false,amount:''};
+  pillS[idx].open=!pillS[idx].open;
+  const sec=document.getElementById('pill-s-section-'+idx);
+  const arr=document.getElementById('pill-s-arrow-'+idx);
+  if(sec)sec.classList.toggle('open',pillS[idx].open);
+  if(arr)arr.classList.toggle('open',pillS[idx].open);
+  if(!pillS[idx].open){pillS[idx].amount='';calc();}
+}
+function setPillS(idx,val){
+  if(!pillS[idx])pillS[idx]={open:true,amount:''};
+  pillS[idx].amount=val;
+  calc();
+}
+
+// ── 挑戰帖 ──
+function initCh(idx){if(!ch[idx])ch[idx]={open:false,open2:false,count1:'',lv1:Math.min(ri+1,17),count2:'',lv2:Math.min(ri+2,17)};}
+
+function toggleChallenge(idx){
+  initCh(idx);
+  ch[idx].open=!ch[idx].open;
+  const section=document.getElementById('ch-section-'+idx);
+  const arrow=document.getElementById('ch-arrow-'+idx);
+  if(section)section.classList.toggle('open',ch[idx].open);
+  if(arrow)arrow.classList.toggle('open',ch[idx].open);
+  renderChWidget(idx);
+  calc();
+}
+function toggleChallenge2(idx){
+  initCh(idx);
+  ch[idx].open2=!ch[idx].open2;
+  renderChWidget(idx);
+}
+function setChVal(idx,key,val){
+  initCh(idx);
+  ch[idx][key]=val;
+  renderChWidget(idx);
+  calc();
+}
+
+function getChBonus(idx){
+  if(!ch[idx]||!ch[idx].open)return 0;
+  const c1=parseInt(ch[idx].count1)||0;
+  const l1=parseInt(ch[idx].lv1)||0;
+  const c2=parseInt(ch[idx].count2)||0;
+  const l2=parseInt(ch[idx].lv2)||0;
+  return c1*CHALLENGE_LOOT[l1].amount + c2*CHALLENGE_LOOT[l2].amount;
+}
+
+function renderChWidget(idx){
+  const w=document.getElementById('ch-widget-'+idx);
+  if(!w)return;
+  initCh(idx);
+  const d=ch[idx];
+  const opts=CHALLENGE_LOOT.map((c,i)=>`<option value="${i}"${i===parseInt(d.lv1)?' selected':''}>${c.name}</option>`).join('');
+  const opts2=CHALLENGE_LOOT.map((c,i)=>`<option value="${i}"${i===parseInt(d.lv2)?' selected':''}>${c.name}</option>`).join('');
+  const bonus=getChBonus(idx);
+  w.innerHTML=`
+    <div class="input-cards" style="margin-bottom:6px;">
+      <div class="input-card">
+        <div class="input-card-label">張數</div>
+        <div class="input-card-row">
+          <input type="number" placeholder="0" min="0" max="99" value="${d.count1}"
+            oninput="setChVal(${idx},'count1',this.value)">
+          <span class="input-card-unit">張</span>
+        </div>
+      </div>
+      <div class="input-card">
+        <div class="input-card-label">挑戰對象等級</div>
+        <select class="challenge-lv-select" onchange="setChVal(${idx},'lv1',this.value)">${opts}</select>
+      </div>
+    </div>
+    <button class="fold-toggle" onclick="toggleChallenge2(${idx})" style="padding:2px 0 6px;margin-bottom:0;">
+      <span style="font-size:11px">＋</span>
+      <span class="fold-toggle-label">另有幾張打不同等級</span>
+      <span class="fold-arrow ${d.open2?'open':''}">▼</span>
+    </button>
+    <div class="fold-section ${d.open2?'open':''}">
+      <div class="input-cards" style="margin-bottom:6px;">
+        <div class="input-card">
+          <div class="input-card-label">另外張數</div>
+          <div class="input-card-row">
+            <input type="number" placeholder="0" min="0" max="99" value="${d.count2}"
+              oninput="setChVal(${idx},'count2',this.value)">
+            <span class="input-card-unit">張</span>
+          </div>
+        </div>
+        <div class="input-card">
+          <div class="input-card-label">挑戰對象等級</div>
+          <select class="challenge-lv-select" onchange="setChVal(${idx},'lv2',this.value)">${opts2}</select>
+        </div>
+      </div>
+    </div>
+    ${bonus>0?`<div class="challenge-total" style="margin-bottom:8px;">⚔️ 最多掠奪 ${fmtN(bonus)} 修為</div>`:''}
+  `;
+}
+
+// ── 工具函數 ──
+function fmtN(n){return Math.round(n).toLocaleString();}
+function fmtT(s){
+  if(!isFinite(s)||s<0)return'—';
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=Math.floor(s%60);
+  if(h>0)return h+'小時 '+m+'分';
+  if(m>0)return m+'分 '+sc+'秒';
+  return sc+'秒';
+}
+
+// ── 紀元 & 場次 ──
+function getEraRange(){
+  const now=new Date();
+  const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());sun.setHours(10,0,0,0);
+  const sat=new Date(sun);sat.setDate(sun.getDate()+6);sat.setHours(23,59,59,999);
+  return{start:sun,end:sat};
+}
+function nextSession(readyAt,era){
+  if(readyAt>era.end)return null;
+  const h=readyAt.getHours(),m=readyAt.getMinutes();
+  if(h>=10&&h<=23&&m<2){
+    const c=new Date(readyAt);c.setMinutes(0,0,0);
+    if(c>=era.start&&c<=era.end)return c;
+  }
+  if(h===0&&m<2){
+    const c=new Date(readyAt);c.setMinutes(0,0,0);
+    const prev=new Date(c);prev.setDate(c.getDate()-1);
+    if(prev.getDay()!==6&&c>=era.start&&c<=era.end)return c;
+  }
+  const cursor=new Date(readyAt);cursor.setMinutes(0,0,0);cursor.setHours(cursor.getHours()+1);
+  for(let i=0;i<200;i++){
+    if(cursor>era.end)return null;
+    const ch2=cursor.getHours(),isSat=cursor.getDay()===6;
+    let valid=false;
+    if(ch2>=10&&ch2<=23)valid=true;
+    else if(ch2===0){const prev=new Date(cursor);prev.setDate(cursor.getDate()-1);if(prev.getDay()!==6)valid=true;}
+    if(valid&&cursor>=era.start&&cursor<=era.end)return new Date(cursor);
+    cursor.setHours(cursor.getHours()+1);
+  }
+  return null;
+}
+function fmtSession(date){
+  const days=["週日","週一","週二","週三","週四","週五","週六"];
+  const h=date.getHours(),dispH=h===0?"24":String(h).padStart(2,"0");
+  const today=new Date(),tmr=new Date(today);tmr.setDate(today.getDate()+1);
+  const isToday=date.getDate()===today.getDate()&&date.getMonth()===today.getMonth();
+  const isTmr=date.getDate()===tmr.getDate()&&date.getMonth()===tmr.getMonth();
+  return{day:isToday?"今天":isTmr?"明天":days[date.getDay()],clock:dispH+":00"};
+}
+
+// ── 計算 ──
+function calcOverflow(stages,accum){
+  const total=stages[0]+stages[1]+stages[2];
+  return accum>=total?{full:true,overflow:accum-total,remain:0}:{full:false,overflow:0,remain:total-accum};
+}
+function computeSessions(initRi,initSi,initCur,speed,pillBonus,era){
+  const results=[];let curRi=initRi;
+  const now=new Date();
+  let alreadyDone=0;
+  for(let i=0;i<initSi;i++)alreadyDone+=REALMS[initRi].stages[i];
+  // 第0場前：修為 + 元氣丹[0] + 挑戰帖[0]
+  let carry=alreadyDone+initCur+pillBonus+getChBonus(0);
+  let lastSession=null;
+  for(let iter=0;iter<20;iter++){
+    const r=REALMS[curRi];
+    const{full,overflow,remain}=calcOverflow(r.stages,carry);
+    const base=lastSession||now;
+    const readyAt=full?base:new Date(base.getTime()+(remain/speed)*1000);
+    const session=nextSession(readyAt,era);
+    if(!session)break;
+    if(lastSession&&session.getTime()===lastSession.getTime())break;
+    results.push({
+      realmLabel:r.name2?`Lv.${r.lv} ${r.name}<br><span style="font-size:11px;opacity:.7">${r.name2}</span>`:`Lv.${r.lv} ${r.name}`,
+      remain:Math.max(0,remain),
+      waitSecs:Math.max(0,(readyAt.getTime()-now.getTime())/1000),
+      sessionDate:session,alreadyReady:full,sessionIdx:iter,
+    });
+    lastSession=session;
+    if(curRi>=REALMS.length-1)break;
+    // 升級後：overflow + 場次間累積 + 下一場前挑戰帖
+    const secsBetween=(session.getTime()-readyAt.getTime())/1000;
+    carry=overflow+secsBetween*speed+getChBonus(iter+1);
+    curRi++;
+  }
+  return results;
+}
+
+// ── 境界選擇 ──
+function renderRealms(){
+  document.getElementById('realm-grid').innerHTML=REALMS.map((r,i)=>
+    `<button class="realm-btn" onclick="setRealm(${i})">Lv.${r.lv}</button>`
+  ).join('');
+}
+function renderStages(){
+  const r=REALMS[ri];
+  document.getElementById('stage-row').innerHTML=SLABELS.map((sl,i)=>
+    `<button class="stage-btn s${i}${i===si?' on':''}" onclick="setStage(${i})">
+      ${sl}<span class="sq">${fmtN(r.stages[i])}</span>
+    </button>`
+  ).join('');
+}
+function setRealm(i){
+  ri=i;si=-1;
+  document.getElementById('inp-current').value='';
+  document.getElementById('realm-grid-wrap').style.display='none';
+  document.getElementById('realm-selected-wrap').style.display='block';
+  const r=REALMS[ri];
+  document.getElementById('rsc-lv').textContent=`Lv.${r.lv}`;
+  document.getElementById('rsc-name').innerHTML=r.name2?`${r.name}<br><span style="font-size:14px;opacity:.6">${r.name2}</span>`:r.name;
+  document.getElementById('stage-selected-card').style.display='none';
+  document.getElementById('stage-row').style.display='flex';
+  renderStages();calc();
+}
+function setStage(i){
+  si=i;
+  document.getElementById('inp-current').value='';
+  const r=REALMS[ri];
+  const scard=document.getElementById('stage-selected-card');
+  scard.className=`stage-selected-card s${i}`;scard.style.display='flex';
+  document.getElementById('ssc-stage').textContent=SLABELS[i];
+  document.getElementById('ssc-amount').textContent=fmtN(r.stages[i])+' 修為';
+  document.getElementById('stage-row').style.display='none';
+  renderStages();calc();
+}
+function resetRealm(){
+  ri=0;si=-1;
+  document.getElementById('inp-current').value='';
+  document.getElementById('realm-grid-wrap').style.display='block';
+  document.getElementById('realm-selected-wrap').style.display='none';
+  renderRealms();calc();
+}
+function resetStage(){
+  si=-1;
+  document.getElementById('inp-current').value='';
+  document.getElementById('stage-selected-card').style.display='none';
+  document.getElementById('stage-row').style.display='flex';
+  renderStages();calc();
+}
+
+// ── 主計算 ──
+function calc(){
+  // 初始化第0場挑戰帖 widget
+  renderChWidget(0);
+
+  const cur=parseFloat(document.getElementById('inp-current').value)||0;
+  const spd=parseFloat(document.getElementById('inp-speed').value)||0;
+  const pill=parseFloat(document.getElementById('inp-pill').value)||0;
+  const ps=document.getElementById('prog-section');
+  const rs=document.getElementById('result-section');
+  const t=getTheme();
+
+  if(!cur||!spd||spd<=0||si<0){
+    ps.style.display='none';
+    rs.innerHTML='<div class="empty-hint">填入修為與速度後顯示場次</div>';
+    return;
+  }
+
+  const r=REALMS[ri];
+  const totalBonus=pill+getChBonus(0);
+  const eff=cur+totalBonus;
+  let done=0;for(let i=0;i<si;i++)done+=r.stages[i];
+  const total=r.stages[0]+r.stages[1]+r.stages[2];
+  const tdone=done+eff;
+  const sp=Math.min(100,Math.round((eff/r.stages[si])*100));
+  const tp=Math.min(100,Math.round((tdone/total)*100));
+  const stageColors={night:['#378ADD','#9F77DD','#c47ee8'],mist:['#2E7AB8','#6A4FB8','#9A3AB8'],ink:['#2E6096','#5A3A96','#8A2A96']};
+  const sc=stageColors[t][si];
+  const fc=t==='night'?'#1D9E75':t==='mist'?'#3CA882':'#4A7C3F';
+  const tc=t==='night'?'rgba(255,255,255,0.07)':t==='mist'?'rgba(91,163,201,0.15)':'rgba(192,153,100,0.15)';
+
+  const R=36,CX=50,CY=50;
+  const angle=Math.PI*tp/100;
+  const ex=CX-R*Math.cos(angle),ey=CY-R*Math.sin(angle);
+  const arcBg=`M${CX-R},${CY} A${R},${R} 0 0,1 ${CX+R},${CY}`;
+  const arcFg=tp<=0?'':tp>=100?arcBg:`M${CX-R},${CY} A${R},${R} 0 ${tp>50?1:0},1 ${ex},${ey}`;
+
+  ps.style.display='block';
+  ps.innerHTML=`<div class="arc-row">
+    <div class="arc-wrap">
+      <svg viewBox="0 0 100 62" width="100" height="62">
+        <path d="${arcBg}" fill="none" stroke="${tc}" stroke-width="8" stroke-linecap="round"/>
+        ${arcFg?`<path d="${arcFg}" fill="none" stroke="${fc}" stroke-width="8" stroke-linecap="round"/>`:''}
+      </svg>
+      <div class="arc-center"><div class="arc-pct">${tp}%</div><div class="arc-sub">後期滿</div></div>
+    </div>
+    <div class="prog-bars">
+      <div>
+        <div class="prog-row-top"><span class="plabel">${SLABELS[si]}進度</span><span class="plabel" style="font-weight:600">${sp}%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:${sp}%;background:${sc}"></div></div>
+      </div>
+      <div>
+        <div class="prog-row-top"><span class="plabel">距後期滿還差</span><span class="plabel" style="font-weight:600">${fmtN(Math.max(0,total-tdone))}</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:${tp}%;background:${fc}"></div></div>
+      </div>
+    </div>
+  </div>`;
+
+  const era=getEraRange();
+  const sessions=computeSessions(ri,si,cur,spd,pill,era);
+  const isMamo=REALMS[ri].name2!==null;
+
+  if(sessions.length===0){
+    const rem=Math.max(0,total-tdone);
+    rs.innerHTML=`<div class="nope-card">
+      <div>
+        <div class="nope-title">本紀元無法打</div>
+        <div class="nope-sub">${rem>0?`修為預計 ${fmtT(rem/spd)} 後滿，已超出本紀元`:'修為已滿，本紀元場次已結束'}</div>
+        <div class="nope-sub" style="margin-top:2px">下週日 10:00 新紀元開始</div>
+      </div><span style="font-size:28px">🚫</span>
+    </div>`;
+    return;
+  }
+
+  const first=sessions[0],sf=fmtSession(first.sessionDate);
+  const ch0Bonus=getChBonus(0);
+  const hasFooter=pill>0||ch0Bonus>0||isMamo;
+
+  let html=`<div class="ticket-card">
+    <div class="ticket-top">
+      <div class="ticket-left">
+        <div class="ticket-badge">最近論道大會</div>
+        <div class="ticket-realm">${first.realmLabel} 後期滿</div>
+        <div class="ticket-wait">${first.alreadyReady?'修為已滿，可立即進秘境':`還差 <b>${fmtN(Math.ceil(first.remain))}</b> 修為・${fmtT(first.waitSecs)} 後`}</div>
+      </div>
+      <div class="ticket-right">
+        <div class="ticket-day">${sf.day}</div>
+        <div class="ticket-time">${sf.clock}</div>
+      </div>
+    </div>
+    ${hasFooter?`<div class="ticket-divider"></div>
+    <div class="ticket-footer">
+      <div class="ticket-hints">
+        ${pill>0?`<div class="ticket-hint-row">💊 元氣丹 +${fmtN(pill)}</div>`:''}
+        ${ch0Bonus>0?`<div class="ticket-hint-row">⚔️ 挑戰帖 +${fmtN(ch0Bonus)}</div>`:''}
+      </div>
+      ${isMamo?`<div class="ticket-mamo">修魔者本時間僅供參考</div>`:''}
+    </div>`:''}
+  </div>`;
+
+  if(sessions.length>1){
+    html+='<div class="timeline">';
+    sessions.slice(1).forEach((s,i)=>{
+      const sf2=fmtSession(s.sessionDate);
+      const isLast=i===sessions.length-2;
+      const nextIdx=i+1;
+      const ch_n=getChBonus(nextIdx);
+      // 場次間：挑戰帖選填 + timeline card
+      html+=`
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line" style="min-height:40px;"></div></div>
+        <div style="flex:1;padding:6px 0;">
+          <div class="between-challenge">
+            <div style="display:flex;gap:8px;margin-bottom:4px;">
+              <button class="fold-toggle" onclick="togglePillS(${nextIdx})" style="flex:1;margin-bottom:0;">
+                <span>💊</span>
+                <span class="fold-toggle-label">打算吃元氣丹</span>
+                <span class="fold-arrow ${pillS[nextIdx]&&pillS[nextIdx].open?'open':''}" id="pill-s-arrow-${nextIdx}">▼</span>
+              </button>
+              <button class="fold-toggle" onclick="toggleChallenge(${nextIdx})" style="flex:1;margin-bottom:0;">
+                <span>⚔️</span>
+                <span class="fold-toggle-label">打算用挑戰帖</span>
+                <span class="fold-arrow ${ch[nextIdx]&&ch[nextIdx].open?'open':''}" id="ch-arrow-${nextIdx}">▼</span>
+              </button>
+            </div>
+            <div class="fold-section ${pillS[nextIdx]&&pillS[nextIdx].open?'open':''}" id="pill-s-section-${nextIdx}">
+              <div class="input-cards" style="margin-bottom:6px;">
+                <div class="input-card" style="grid-column:span 2;">
+                  <div class="input-card-label">元氣丹可補回的修為</div>
+                  <div class="input-card-row">
+                    <input type="number" placeholder="0" min="0" value="${pillS[nextIdx]&&pillS[nextIdx].amount||''}"
+                      oninput="setPillS(${nextIdx},this.value)">
+                    <span class="input-card-unit">修為</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="fold-section ${ch[nextIdx]&&ch[nextIdx].open?'open':''}" id="ch-section-${nextIdx}">
+              <div id="ch-widget-${nextIdx}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div>${!isLast?'<div class="tl-line"></div>':''}</div>
+        <div class="tl-card">
+          <div>
+            <div class="tl-num">連升第 ${i+2} 場</div>
+            <div class="tl-realm">${s.realmLabel} 後期滿</div>
+            <div class="tl-wait">${s.alreadyReady?'修為已滿':`還差 <b>${fmtN(Math.ceil(s.remain))}</b>・${fmtT(s.waitSecs)} 後`}</div>
+          </div>
+          <div class="tl-right"><div class="tl-day">${sf2.day}</div><div class="tl-clock">${sf2.clock}</div></div>
+        </div>
+      </div>`;
+      // render widget（在 DOM 插入後）
+      setTimeout(()=>renderChWidget(nextIdx),0);
+    });
+    html+='</div>';
+  }
+  rs.innerHTML=html;
+  // render 場次間 widgets
+  sessions.slice(1).forEach((s,i)=>{setTimeout(()=>renderChWidget(i+1),10);});
+}
+
+renderRealms();
+
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>{e.preventDefault();alert('🔮 天機不可外洩！');});
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.key==='F12'){e.preventDefault();return false;}
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&'ij'.includes(e.key.toLowerCase())){e.preventDefault();return false;}
+  if((e.ctrlKey||e.metaKey)&&'us'.includes(e.key.toLowerCase())){e.preventDefault();return false;}
+});
+setInterval(function(){const t0=performance.now();debugger;const t1=performance.now();if(t1-t0>100)document.body.innerHTML='<h1>⚠️ 偵測到意圖窺探天機之舉，防禦陣法已啟動！請關閉開發者工具並重新整理網頁。</h1>';},1000);
+
+function cyclePillTheme(){
+  const order=['night','mist','ink'];
+  const cur=getTheme();
+  const next=order[(order.indexOf(cur)+1)%order.length];
+  applyTheme(next);
+  manualOverride=true;
+  if(typeof manualTimer!=='undefined'&&manualTimer)clearTimeout(manualTimer);
+  manualTimer=setTimeout(()=>{manualOverride=false;},3600000);
+}
+</script>
+</body>
+</html>

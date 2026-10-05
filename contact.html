@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>修仙小幫狗 · 聯絡我們</title>
+<script>
+(function(){
+  var h=new Date().getHours();
+  var t=h<8?'night':h<16?'mist':'ink';
+  var bg={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
+  document.documentElement.className=t;
+  document.documentElement.style.backgroundColor=bg[t];
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;max-width:100vw;width:100%;}
+html{background:#1a1c23;}html.mist{background:#E8F1F8;}html.ink{background:#F2EDE3;}
+body{background:transparent;min-height:100vh;
+  -webkit-user-select:none;-moz-user-select:none;user-select:none;
+  transition:background-color 1.4s ease,color 1.4s ease;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
+.mist,.ink{font-family:'Noto Serif TC',serif;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;transition:opacity 1.4s ease;}
+.night::before{opacity:0;}
+.mist::before{background-image:radial-gradient(ellipse at 15% 0%,rgba(120,180,220,0.22) 0%,transparent 45%),radial-gradient(ellipse at 85% 100%,rgba(100,160,200,0.18) 0%,transparent 45%);}
+.ink::before{background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(139,110,60,0.06) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(139,110,60,0.04) 40px);}
+html.night,.night{background-color:#1a1c23;color:#e2e8f0;}
+html.mist,.mist{background-color:#E8F1F8;color:#1E3D52;}
+html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
+
+/* ── Header ── */
+.header{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:16px 20px 12px;transition:background 1.4s ease,border-color 1.4s ease;}
+.night .header{background:rgba(15,17,26,0.85);border-bottom:1px solid #2d3748;}
+.mist  .header{background:rgba(232,241,248,0.92);border-bottom:1px solid #B0CCE0;}
+.ink   .header{background:rgba(242,237,227,0.92);border-bottom:1px solid #C9B99A;}
+.site-title{font-size:22px;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;gap:8px;transition:all 1.4s ease;}
+.night .site-title{font-family:serif;background:linear-gradient(to right,#fef08a,#fbbf24,#fde68a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.night .site-title .emoji{-webkit-text-fill-color:initial;background:none;}
+.mist  .site-title{font-family:'Noto Serif TC',serif;color:#1E3D52;-webkit-text-fill-color:#1E3D52;}
+.ink   .site-title{font-family:'Noto Serif TC',serif;color:#3D2B1A;-webkit-text-fill-color:#3D2B1A;}
+.title-sub{font-size:12px;margin-top:3px;transition:color 1.4s ease;}
+.night .title-sub{color:#78716c;font-family:serif;font-weight:600;}
+.mist  .title-sub{color:#4A7090;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
+.ink   .title-sub{color:#7A5C3A;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
+
+/* ── Content ── */
+.content{padding:24px 20px 120px;max-width:600px;margin:0 auto;position:relative;z-index:1;}
+
+.page-title{font-size:20px;font-weight:700;margin-bottom:6px;transition:color 1.4s ease;}
+.night .page-title{color:#e2e8f0;}
+.mist  .page-title{color:#1E3D52;}
+.ink   .page-title{color:#3D2B1A;}
+.page-desc{font-size:14px;margin-bottom:28px;line-height:1.6;transition:color 1.4s ease;}
+.night .page-desc{color:#64748b;}
+.mist  .page-desc{color:#4A7090;}
+.ink   .page-desc{color:#7A5C3A;}
+
+/* ── Form ── */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:13px;margin-bottom:6px;display:block;transition:color 1.4s ease;}
+.night .form-label{color:#94a3b8;}
+.mist  .form-label{color:#4A7090;}
+.ink   .form-label{color:#7A5C3A;}
+.form-input,.form-textarea{width:100%;border-radius:14px;padding:12px 16px;font-size:15px;font-family:inherit;outline:none;transition:all 1.4s ease;}
+.night .form-input,.night .form-textarea{background:#1e293b;border:1px solid #2d3748;color:#e2e8f0;}
+.night .form-input:focus,.night .form-textarea:focus{border-color:#f59e0b;}
+.night .form-input::placeholder,.night .form-textarea::placeholder{color:#475569;}
+.mist  .form-input,.mist  .form-textarea{background:rgba(250,253,255,0.95);border:1px solid #B0CCE0;color:#1E3D52;}
+.mist  .form-input:focus,.mist  .form-textarea:focus{border-color:#5BA3C9;}
+.mist  .form-input::placeholder,.mist  .form-textarea::placeholder{color:#90B8D0;}
+.ink   .form-input,.ink   .form-textarea{background:rgba(255,251,242,0.95);border:1px solid #C9B99A;color:#3D2B1A;}
+.ink   .form-input:focus,.ink   .form-textarea:focus{border-color:#B8860B;}
+.ink   .form-input::placeholder,.ink   .form-textarea::placeholder{color:#A8896A;}
+.form-textarea{resize:vertical;min-height:120px;line-height:1.6;}
+
+.submit-btn{width:100%;padding:14px;border-radius:999px;border:none;cursor:pointer;font-size:16px;font-weight:600;font-family:inherit;transition:all .2s;margin-top:8px;}
+.night .submit-btn{background:linear-gradient(to right,#f59e0b,#fbbf24);color:#1c1917;}
+.mist  .submit-btn{background:#1E3D52;color:#E8F4FC;}
+.ink   .submit-btn{background:#3D2B1A;color:#F2EDE3;}
+.night .submit-btn:hover{opacity:.9;}
+.mist  .submit-btn:hover{opacity:.85;}
+.ink   .submit-btn:hover{opacity:.85;}
+
+/* 成功訊息 */
+.success-msg{border-radius:14px;padding:20px;text-align:center;margin-top:16px;display:none;transition:all 1.4s ease;}
+.night .success-msg{background:rgba(29,158,117,0.12);border:1px solid rgba(29,158,117,0.4);color:#34d399;}
+.mist  .success-msg{background:#E4F4EC;border:.5px solid #90CCA8;color:#1A6040;}
+.ink   .success-msg{background:#E8F2E4;border:.5px solid #8DC07C;color:#2D5C1E;}
+.success-icon{font-size:28px;margin-bottom:8px;}
+.success-title{font-size:16px;font-weight:600;margin-bottom:4px;}
+.success-sub{font-size:13px;opacity:.7;}
+
+/* 分隔 */
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.divider-line{flex:1;height:.5px;transition:background 1.4s ease;}
+.night .divider-line{background:#2d3748;}
+.mist  .divider-line{background:#C2D8E8;}
+.ink   .divider-line{background:#C9B99A;}
+.divider-text{font-size:12px;transition:color 1.4s ease;}
+.night .divider-text{color:#475569;}
+.mist  .divider-text{color:#6090A8;}
+.ink   .divider-text{color:#9A7A5A;}
+
+/* email 直接連結 */
+.email-link{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;}
+.night .email-link{background:rgba(255,255,255,0.05);border:1px solid #2d3748;color:#94a3b8;}
+.night .email-link:hover{border-color:#475569;color:#e2e8f0;}
+.mist  .email-link{background:rgba(250,253,255,0.95);border:1px solid #B0CCE0;color:#4A7090;}
+.mist  .email-link:hover{border-color:#5BA3C9;color:#1E3D52;}
+.ink   .email-link{background:rgba(255,251,242,0.95);border:1px solid #C9B99A;color:#7A5C3A;}
+.ink   .email-link:hover{border-color:#B8860B;color:#3D2B1A;}
+
+        #bottom-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:2px;z-index:100;padding:6px 8px;border-radius:999px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 1.4s ease;}
+.night #bottom-bar{background:rgba(10,14,20,0.92);border:0.5px solid rgba(255,255,255,0.1);}
+.mist  #bottom-bar{background:rgba(232,241,248,0.92);border:.5px solid #B0CCE0;}
+.ink   #bottom-bar{background:rgba(242,237,227,0.92);border:.5px solid #C9B99A;}
+#clock-txt{font-size:11px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
+.night #clock-txt{color:#f59e0b;}
+.mist  #clock-txt{color:#1E3D52;}
+.ink   #clock-txt{color:#3D2B1A;}
+.p-sep{width:0.5px;height:14px;margin:0 4px;transition:background 1.4s ease;}
+.night .p-sep{background:rgba(255,255,255,0.08);}
+.mist  .p-sep{background:#C2D8E8;}
+.ink   .p-sep{background:#C9B99A;}
+/* 主題點：單一循環點 */
+#theme-cycle{width:10px;height:10px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:all .25s;flex-shrink:0;margin:0 4px;}
+.night #theme-cycle{border-color:rgba(245,158,11,0.5);}
+.mist  #theme-cycle{border-color:#5BA3C9;}
+.ink   #theme-cycle{border-color:#B8860B;}
+/* tab */
+.p-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 7px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.p-tab-icon{font-size:15px;transition:color 1.4s ease;}
+.p-tab-label{font-size:8px;white-space:nowrap;transition:color 1.4s ease;}
+.night .p-tab-icon,.night .p-tab-label{color:#374151;}
+.night .p-tab.on .p-tab-icon,.night .p-tab.on .p-tab-label{color:#f59e0b;}
+.mist  .p-tab-icon,.mist  .p-tab-label{color:#90B8D0;}
+.mist  .p-tab.on .p-tab-icon,.mist  .p-tab.on .p-tab-label{color:#1E3D52;}
+.ink   .p-tab-icon,.ink   .p-tab-label{color:#C9B99A;}
+.ink   .p-tab.on .p-tab-icon,.ink   .p-tab.on .p-tab-label{color:#3D2B1A;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div style="max-width:600px;margin:0 auto;">
+    <div class="site-title"><span class="emoji">🐶</span>修仙小幫狗</div>
+    <div style="font-size:15px;font-weight:700;letter-spacing:.08em;margin:2px 0 3px;" class="site-title"><span class="emoji">✉️</span> 聯絡我們</div>
+    <div class="title-sub">意見回饋、功能建議、問題回報</div>
+  </div>
+</header>
+
+<div class="content">
+  <div class="page-desc">有任何建議或問題，歡迎留言！通常會在幾天內回覆。</div>
+
+  <!-- Formspree 表單 -->
+  <form id="contact-form" action="https://formspree.io/f/xjgddave" method="POST">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label" for="name">稱呼</label>
+        <input class="form-input" type="text" id="name" name="name" placeholder="名字或暱稱" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="game-id">遊戲中的 ID</label>
+        <input class="form-input" type="text" id="game-id" name="game_id" placeholder="選填">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="email">Email（選填，方便我們回覆）</label>
+      <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="message">留言內容</label>
+      <textarea class="form-textarea" id="message" name="message" placeholder="想說的話、發現的問題、或希望加入的功能..." required></textarea>
+    </div>
+    <button type="submit" class="submit-btn">送出留言</button>
+  </form>
+
+  <div class="success-msg" id="success-msg">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">留言已送出！</div>
+    <div class="success-sub">感謝你的回饋，我們會盡快回覆。</div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">或直接寄信</div>
+    <div class="divider-line"></div>
+  </div>
+
+
+</div>
+
+<div id="bottom-bar">
+  <span id="clock-txt">☾ 00:00</span>
+  <div class="p-sep"></div>
+  <div id="theme-cycle" onclick="cyclePillTheme()" title="切換主題"></div>
+  <div class="p-sep"></div>
+  <a href="index.html" class="p-tab">
+    <span class="p-tab-icon">🏠</span>
+    <span class="p-tab-label">首頁</span>
+  </a>
+  <a href="quiz-adv.html" class="p-tab">
+    <span class="p-tab-icon">📖</span>
+    <span class="p-tab-label">奇遇</span>
+  </a>
+  <a href="cal.html" class="p-tab">
+    <span class="p-tab-icon">⚡</span>
+    <span class="p-tab-label">修為</span>
+  </a>
+  <a href="contact.html" class="p-tab on">
+    <span class="p-tab-icon">✉️</span>
+    <span class="p-tab-label">聯絡</span>
+  </a>
+</div>
+
+<script>
+const ICONS={night:'☾',mist:'☀',ink:'🌆'};
+const BG={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
+
+function getTheme(){return document.documentElement.classList.contains('night')?'night':document.documentElement.classList.contains('mist')?'mist':'ink';}
+function getAutoTheme(){const h=new Date().getHours();return h<8?'night':h<16?'mist':'ink';}
+function applyTheme(t){
+  ['night','mist','ink'].forEach(c=>{document.documentElement.classList.remove(c);document.body.classList.remove(c);});
+  document.documentElement.classList.add(t);document.body.classList.add(t);
+  document.body.style.backgroundColor=BG[t];document.documentElement.style.backgroundColor=BG[t];
+  updateClock(t);
+}
+function updateClock(t){
+  const n=new Date(),hh=String(n.getHours()).padStart(2,'0'),mm=String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('clock-txt').textContent=ICONS[t]+' '+hh+':'+mm;
+}
+function checkTime(){updateClock(getTheme());const a=getAutoTheme();if(a!==getTheme())applyTheme(a);}
+applyTheme(getAutoTheme());
+setInterval(checkTime,30000);
+
+// Formspree AJAX 送出
+document.getElementById('contact-form').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const btn=this.querySelector('.submit-btn');
+  btn.textContent='送出中...';btn.disabled=true;
+  try{
+    const res=await fetch(this.action,{method:'POST',body:new FormData(this),headers:{Accept:'application/json'}});
+    if(res.ok){
+      this.style.display='none';
+      document.getElementById('success-msg').style.display='block';
+    } else {
+      btn.textContent='送出失敗，請再試一次';btn.disabled=false;
+    }
+  } catch(err){
+    btn.textContent='網路錯誤，請稍後再試';btn.disabled=false;
+  }
+});
+
+function getTheme(){const cl=document.documentElement.classList;return cl.contains('night')?'night':cl.contains('mist')?'mist':'ink';}
+function cyclePillTheme(){
+  const order=['night','mist','ink'];
+  const cur=getTheme();
+  const next=order[(order.indexOf(cur)+1)%3];
+  manualSet(next);
+}
+</script>
+</body>
+</html>
