@@ -21,9 +21,9 @@ html{background:#1a1c23;}html.mist{background:#E8F1F8;}html.ink{background:#F2ED
 body{background:transparent;min-height:100vh;
   -webkit-user-select:none;-moz-user-select:none;user-select:none;
   transition:background-color 1.4s ease,color 1.4s ease;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  font-family:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;}
 input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
-.mist,.ink{font-family:'Noto Serif TC',serif;}
+button,input,textarea,select{font-family:inherit;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;transition:opacity 1.4s ease;}
 .night::before{opacity:0;}
 .mist::before{background-image:radial-gradient(ellipse at 15% 0%,rgba(120,180,220,0.22) 0%,transparent 45%),radial-gradient(ellipse at 85% 100%,rgba(100,160,200,0.18) 0%,transparent 45%);}
@@ -43,9 +43,9 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 .mist  .site-title{font-family:'Noto Serif TC',serif;color:#1E3D52;-webkit-text-fill-color:#1E3D52;}
 .ink   .site-title{font-family:'Noto Serif TC',serif;color:#3D2B1A;-webkit-text-fill-color:#3D2B1A;}
 .title-sub{font-size:12px;margin-top:3px;transition:color 1.4s ease;}
-.night .title-sub{color:#78716c;font-family:serif;font-weight:600;}
-.mist  .title-sub{color:#4A7090;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
-.ink   .title-sub{color:#7A5C3A;font-family:'Noto Serif TC',serif;letter-spacing:.05em;}
+.night .title-sub{color:#78716c;font-weight:600;}
+.mist  .title-sub{color:#4A7090;letter-spacing:.05em;}
+.ink   .title-sub{color:#7A5C3A;letter-spacing:.05em;}
 
 /* ── Content ── */
 .content{padding:24px 20px 120px;max-width:600px;margin:0 auto;position:relative;z-index:1;}
@@ -95,15 +95,6 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 .success-sub{font-size:13px;opacity:.7;}
 
 /* 分隔 */
-.divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
-.divider-line{flex:1;height:.5px;transition:background 1.4s ease;}
-.night .divider-line{background:#2d3748;}
-.mist  .divider-line{background:#C2D8E8;}
-.ink   .divider-line{background:#C9B99A;}
-.divider-text{font-size:12px;transition:color 1.4s ease;}
-.night .divider-text{color:#475569;}
-.mist  .divider-text{color:#6090A8;}
-.ink   .divider-text{color:#9A7A5A;}
 
 /* email 直接連結 */
 .email-link{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;}
@@ -118,7 +109,7 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 .night #bottom-bar{background:rgba(10,14,20,0.92);border:0.5px solid rgba(255,255,255,0.1);}
 .mist  #bottom-bar{background:rgba(232,241,248,0.92);border:.5px solid #B0CCE0;}
 .ink   #bottom-bar{background:rgba(242,237,227,0.92);border:.5px solid #C9B99A;}
-#clock-txt{font-size:11px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
+#clock-txt{font-size:12px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
 .night #clock-txt{color:#f59e0b;}
 .mist  #clock-txt{color:#1E3D52;}
 .ink   #clock-txt{color:#3D2B1A;}
@@ -134,7 +125,7 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 /* tab */
 .p-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 7px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s;}
 .p-tab-icon{font-size:15px;transition:color 1.4s ease;}
-.p-tab-label{font-size:8px;white-space:nowrap;transition:color 1.4s ease;}
+.p-tab-label{font-size:12px;white-space:nowrap;transition:color 1.4s ease;}
 .night .p-tab-icon,.night .p-tab-label{color:#374151;}
 .night .p-tab.on .p-tab-icon,.night .p-tab.on .p-tab-label{color:#f59e0b;}
 .mist  .p-tab-icon,.mist  .p-tab-label{color:#90B8D0;}
@@ -195,11 +186,6 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
     <div class="success-sub">感謝你的回饋。想讓小幫狗更有精神回信？左下角可以餵食 🐾</div>
   </div>
 
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-text">或直接寄信</div>
-    <div class="divider-line"></div>
-  </div>
 
 
 </div>

@@ -52,7 +52,8 @@
         html.night, .night { background-color: #1a1c23; color: #e2e8f0; }
         html.mist,  .mist  { background-color: #E8F1F8; color: #1E3D52; }
         html.ink,   .ink   { background-color: #F2EDE3; color: #3D2B1A; }
-        .night, .mist, .ink { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', 'Helvetica Neue', sans-serif; }
+        .night, .mist, .ink { font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; }
+        button,input,textarea,select{font-family:inherit;}
 
         /* ══ Header ══ */
         .header {
@@ -79,28 +80,28 @@
         .mist  .site-title { font-family: 'Noto Serif TC', serif; color: #1E3D52; -webkit-text-fill-color: #1E3D52; }
         .ink   .site-title { font-family: 'Noto Serif TC', serif; color: #3D2B1A; -webkit-text-fill-color: #3D2B1A; }
 
-        .count-badge { font-size: 11px; border-radius: 20px; padding: 2px 10px; font-weight: 400; transition: all 1.4s ease; }
+        .count-badge { font-size: 12px; border-radius: 20px; padding: 2px 10px; font-weight: 400; transition: all 1.4s ease; }
         .night .count-badge { background: rgba(120,80,0,0.4); color: #fbbf24; border: 1px solid rgba(120,80,0,0.5); }
         .mist  .count-badge { background: rgba(91,163,201,0.15); color: #1E6090; border: .5px solid rgba(91,163,201,0.4); }
         .ink   .count-badge { background: rgba(192,57,27,0.12); color: #C0391B; border: .5px solid rgba(192,57,27,0.3); }
 
         .title-sub { font-size: 12px; margin-top: 3px; transition: color 1.4s ease; }
-        .night .title-sub { color: #78716c; font-family: serif; font-weight: 600; }
-        .mist  .title-sub { color: #4A7090; font-family: 'Noto Serif TC', serif; letter-spacing: .05em; }
-        .ink   .title-sub { color: #7A5C3A; font-family: 'Noto Serif TC', serif; letter-spacing: .05em; }
+        .night .title-sub { color: #78716c; font-weight: 600; }
+        .mist  .title-sub { color: #4A7090; letter-spacing: .05em; }
+        .ink   .title-sub { color: #7A5C3A; letter-spacing: .05em; }
 
         .search-input {
             padding: 6px 14px; border-radius: 8px; font-size: 13px;
             width: 100%; max-width: 320px; outline: none;
             transition: all 1.4s ease;
         }
-        .night .search-input { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; font-family: sans-serif; }
+        .night .search-input { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; }
         .night .search-input::placeholder { color: #64748b; }
         .night .search-input:focus { border-color: #f59e0b; }
-        .mist  .search-input { background: rgba(250,253,255,0.92); border: 1px solid #B0CCE0; color: #1E3D52; font-family: 'Noto Serif TC', serif; }
+        .mist  .search-input { background: rgba(250,253,255,0.92); border: 1px solid #B0CCE0; color: #1E3D52; }
         .mist  .search-input::placeholder { color: #80A8C0; }
         .mist  .search-input:focus { border-color: #5BA3C9; }
-        .ink   .search-input { background: rgba(255,251,242,0.9); border: 1px solid #C9B99A; color: #3D2B1A; font-family: 'Noto Serif TC', serif; }
+        .ink   .search-input { background: rgba(255,251,242,0.9); border: 1px solid #C9B99A; color: #3D2B1A; }
         .ink   .search-input::placeholder { color: #A8896A; }
         .ink   .search-input:focus { border-color: #B8860B; }
 
@@ -113,7 +114,7 @@
         .mist  .filter-row { border-top: .5px solid #B0CCE0; }
         .ink   .filter-row { border-top: .5px solid #C9B99A; }
 
-        .filter-label { font-size: 11px; margin-right: 2px; transition: color 1.4s ease; }
+        .filter-label { font-size: 12px; margin-right: 2px; transition: color 1.4s ease; }
         .night .filter-label { color: #94a3b8; }
         .mist  .filter-label { color: #4A7090; }
         .ink   .filter-label { color: #7A5C3A; }
@@ -125,10 +126,10 @@
         .night .filter-btn:hover { background: #334155; }
         .night .filter-btn.active { background: #f59e0b; color: #0f172a; font-weight: 600; }
         /* Mist */
-        .mist .filter-btn { border: .5px solid #B0CCE0; background: rgba(250,253,255,0.8); color: #2A5878; font-family: 'Noto Serif TC', serif; }
+        .mist .filter-btn { border: .5px solid #B0CCE0; background: rgba(250,253,255,0.8); color: #2A5878; }
         .mist .filter-btn:hover, .mist .filter-btn.active { background: #1E3D52; color: #E8F4FC; border-color: #1E3D52; }
         /* Ink */
-        .ink .filter-btn { border: .5px solid #C9B99A; background: rgba(255,251,242,0.7); color: #5C4030; font-family: 'Noto Serif TC', serif; }
+        .ink .filter-btn { border: .5px solid #C9B99A; background: rgba(255,251,242,0.7); color: #5C4030; }
         .ink .filter-btn:hover, .ink .filter-btn.active { background: #3D2B1A; color: #F2EDE3; border-color: #3D2B1A; }
 
         /* ══ Grid ══ */
@@ -148,7 +149,7 @@
         .clear-btn {
             position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
             width: 18px; height: 18px; border-radius: 50%; border: none;
-            cursor: pointer; font-size: 11px; line-height: 1;
+            cursor: pointer; font-size: 12px; line-height: 1;
             display: none; align-items: center; justify-content: center;
             transition: all 1.4s ease;
         }
@@ -166,12 +167,12 @@
         .ink   .card { background: rgba(255,251,242,0.88); border: .5px solid #C9B99A; }
         .ink   .card:hover { border-color: #B8860B; box-shadow: 0 2px 12px rgba(139,110,60,0.12); }
 
-        .card-num { font-size: 8px; line-height: 1; font-family: monospace; margin-bottom: 4px; transition: color 1.4s ease; }
+        .card-num { font-size: 12px; line-height: 1; font-family: monospace; margin-bottom: 4px; transition: color 1.4s ease; }
         .night .card-num { color: #475569; }
         .mist  .card-num { color: #80A8C4; }
         .ink   .card-num { color: #A8896A; }
 
-        .card-tag { font-size: 7.5px; margin-left: 5px; padding: 1px 5px; border-radius: 3px; transition: all 1.4s ease; }
+        .card-tag { font-size: 12px; margin-left: 5px; padding: 1px 5px; border-radius: 3px; transition: all 1.4s ease; }
         .night .card-tag { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
         .mist  .card-tag { color: #4A90B8; }
         .ink   .card-tag { color: #C0391B; }
@@ -184,7 +185,7 @@
             text-align: center; min-height: 72px; transition: all 1.4s ease;
         }
         .opt-text  { font-size: 13px; font-weight: 500; margin-bottom: 6px; transition: color 1.4s ease; }
-        .opt-badge { font-size: 10px; padding: 2px 0; border-radius: 4px; font-weight: 700; white-space: nowrap; width: 100%; text-align: center; transition: all 1.4s ease; }
+        .opt-badge { font-size: 12px; padding: 2px 0; border-radius: 4px; font-weight: 700; white-space: nowrap; width: 100%; text-align: center; transition: all 1.4s ease; }
 
         /* Night — original Tailwind colours */
         .night .r-聚靈丹{background:rgba(6,78,59,.4);border:1px solid rgba(6,78,59,.4);}.night .r-聚靈丹 .opt-text{color:#34d399;}.night .r-聚靈丹 .opt-badge{background:#10b981;color:#022c22;}
@@ -233,7 +234,7 @@
 .night #bottom-bar{background:rgba(10,14,20,0.92);border:0.5px solid rgba(255,255,255,0.1);}
 .mist  #bottom-bar{background:rgba(232,241,248,0.92);border:.5px solid #B0CCE0;}
 .ink   #bottom-bar{background:rgba(242,237,227,0.92);border:.5px solid #C9B99A;}
-#clock-txt{font-size:11px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
+#clock-txt{font-size:12px;font-family:monospace;letter-spacing:.03em;padding:0 6px;white-space:nowrap;transition:color 1.4s ease;}
 .night #clock-txt{color:#f59e0b;}
 .mist  #clock-txt{color:#1E3D52;}
 .ink   #clock-txt{color:#3D2B1A;}
@@ -247,7 +248,7 @@
 .ink   #theme-cycle{border-color:#B8860B;}
 .p-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 7px;border-radius:8px;cursor:pointer;text-decoration:none;transition:all .2s;}
 .p-tab-icon{font-size:15px;transition:color 1.4s ease;}
-.p-tab-label{font-size:8px;white-space:nowrap;transition:color 1.4s ease;}
+.p-tab-label{font-size:12px;white-space:nowrap;transition:color 1.4s ease;}
 .night .p-tab-icon,.night .p-tab-label{color:#374151;}
 .night .p-tab.on .p-tab-icon,.night .p-tab.on .p-tab-label{color:#f59e0b;}
 .mist  .p-tab-icon,.mist  .p-tab-label{color:#90B8D0;}
@@ -273,7 +274,7 @@
             <div>
                 <h1 class="site-title" style="font-size:20px;margin:0 0 2px 0;display:flex;align-items:center;gap:8px">
                     <span class="emoji">🐶</span> 修仙小幫狗
-                    <span class="count-badge" id="totalBadge" style="font-size:11px;font-weight:400">154 筆</span>
+                    <span class="count-badge" id="totalBadge" style="font-size:12px;font-weight:400">154 筆</span>
                 </h1>
                 <h3 class="site-title" style="font-size:15px;margin:0 0 4px 0;letter-spacing:.08em"><span class="emoji">☯</span> 混沌奇遇寶典</h3>
                 <div class="title-sub">窺探天機，趨吉避凶。助道友一鍵勘破。</div>
