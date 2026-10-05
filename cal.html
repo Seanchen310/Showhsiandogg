@@ -750,7 +750,7 @@ function calc(){
   const angle=Math.PI*tp/100;
   const ex=CX-R*Math.cos(angle),ey=CY-R*Math.sin(angle);
   const arcBg=`M${CX-R},${CY} A${R},${R} 0 0,1 ${CX+R},${CY}`;
-  const arcFg=tp<=0?'':tp>=100?arcBg:`M${CX-R},${CY} A${R},${R} 0 ${tp>50?1:0},1 ${ex},${ey}`;
+  const arcFg=tp<=0?'':tp>=100?arcBg:`M${CX-R},${CY} A${R},${R} 0 0,1 ${ex},${ey}`;
 
   ps.style.display='block';
   ps.innerHTML=`<div class="arc-row">
