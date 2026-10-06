@@ -293,6 +293,12 @@ button,input,textarea,select{font-family:inherit;}
 .night .brand b{background-image:linear-gradient(135deg,#fef08a,#fbbf24);}
 .mist  .brand b{background-image:linear-gradient(135deg,#1E6FA8,#23866A);}
 .ink   .brand b{background-image:linear-gradient(135deg,#A8321A,#8E5A06);}
+
+/* ── 非官方聲明 ── */
+.site-note{font-size:12px;line-height:1.7;text-align:left;margin-top:28px;transition:color 1.4s ease;}
+.night .site-note{color:#94a3b8;}
+.mist  .site-note{color:#4A7090;}
+.ink   .site-note{color:#7A5C3A;}
 </style>
 </head>
 <body>
@@ -376,6 +382,7 @@ button,input,textarea,select{font-family:inherit;}
 
   <div id="prog-section" style="display:none;" class="prog-section"></div>
   <div id="result-section"><div class="empty-hint">填入修為與速度後顯示場次</div></div>
+  <footer class="site-note">本站乃散修自立門戶，非官方所設，與遊戲官方毫無瓜葛。所載天機皆為道友整理，僅供參詳；若與實際不符，以遊戲為準。遊戲相關名號、圖像，權歸原主。</footer>
 </div>
 
 <div id="bottom-bar">
@@ -814,7 +821,8 @@ function calc(){
 
   const era=getEraRange();
   const sessions=computeSessions(ri,si,cur,spd,pill,era);
-  const isMamo=REALMS[ri].name2!==null;
+  // Lv.4 起仙魔有差異：連升途中任一場到 Lv.4 以上就提示
+  const isMamo=REALMS[Math.min(ri+Math.max(sessions.length-1,0),REALMS.length-1)].lv>=4;
 
   if(sessions.length===0){
     const rem=Math.max(0,total-tdone);

@@ -152,6 +152,12 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 .night .brand b{background-image:linear-gradient(135deg,#fef08a,#fbbf24);}
 .mist  .brand b{background-image:linear-gradient(135deg,#1E6FA8,#23866A);}
 .ink   .brand b{background-image:linear-gradient(135deg,#A8321A,#8E5A06);}
+
+/* ── 個資說明 ── */
+.form-note{font-size:12px;line-height:1.6;text-align:left;margin-top:10px;transition:color 1.4s ease;}
+.night .form-note{color:#94a3b8;}
+.mist  .form-note{color:#4A7090;}
+.ink   .form-note{color:#7A5C3A;}
 </style>
 </head>
 <body>
@@ -190,6 +196,7 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
     </div>
     <input type="hidden" name="vote" id="vote">
     <button type="submit" class="submit-btn">送出留言</button>
+    <div class="form-note">你填寫的稱呼、遊戲 ID、Email 和留言，只用來了解你的建議與回報問題，不會公開，也不會提供給其他人。表單透過 Formspree 服務傳送。Email 為選填，不填也能留言。</div>
   </form>
 
   <div class="success-msg" id="success-msg">

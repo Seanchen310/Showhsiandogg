@@ -135,7 +135,7 @@
         /* ══ Grid ══ */
         .grid-container {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 12px; padding: 16px 16px 182px;
+            gap: 12px; padding: 16px 16px 0;
             position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
         }
 
@@ -275,6 +275,12 @@
 .night .brand b{background-image:linear-gradient(135deg,#fef08a,#fbbf24);}
 .mist  .brand b{background-image:linear-gradient(135deg,#1E6FA8,#23866A);}
 .ink   .brand b{background-image:linear-gradient(135deg,#A8321A,#8E5A06);}
+
+/* ── 非官方聲明 ── */
+.site-note{font-size:12px;line-height:1.7;text-align:left;margin-top:28px;transition:color 1.4s ease;}
+.night .site-note{color:#94a3b8;}
+.mist  .site-note{color:#4A7090;}
+.ink   .site-note{color:#7A5C3A;}
 </style>
 </head>
 <body>
@@ -311,6 +317,7 @@
 </header>
 
 <div class="grid-container" id="cardsContainer"></div>
+<footer class="site-note" style="max-width:1200px;margin:28px auto 0;padding:0 16px 182px">本站乃散修自立門戶，非官方所設，與遊戲官方毫無瓜葛。所載天機皆為道友整理，僅供參詳；若與實際不符，以遊戲為準。遊戲相關名號、圖像，權歸原主。</footer>
 
 <div id="bottom-bar">
   <span id="clock-txt">☾ 00:00</span>
