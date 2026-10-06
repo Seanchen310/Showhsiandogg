@@ -8,7 +8,8 @@
 (function(){
   var h=new Date().getHours();
   var t=h<8?'night':h<16?'mist':'ink';
-  var bg={night:'#0d0f14',mist:'#E8F1F8',ink:'#F2EDE3'};
+  try{var v=JSON.parse(localStorage.getItem('xxThemePref'));if(v&&v.until>Date.now())t=v.pref;}catch(e){}
+  var bg={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
   document.documentElement.className=t;
   document.documentElement.style.backgroundColor=bg[t];
 })();
@@ -17,7 +18,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{overflow-x:hidden;overflow-x:clip;max-width:100vw;width:100%;}
-html{background:#0d0f14;overflow-y:scroll;}html.mist{background:#E8F1F8;}html.ink{background:#F2EDE3;}
+html{background:#1a1c23;overflow-y:scroll;}html.mist{background:#E8F1F8;}html.ink{background:#F2EDE3;}
 body{background:transparent;min-height:100vh;
   -webkit-user-select:none;-moz-user-select:none;user-select:none;
   transition:background-color 1.4s ease,color 1.4s ease;
@@ -31,7 +32,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;tra
 }
 .mist::before{background-image:radial-gradient(ellipse at 15% 0%,rgba(120,180,220,0.22) 0%,transparent 45%),radial-gradient(ellipse at 85% 100%,rgba(100,160,200,0.18) 0%,transparent 45%);}
 .ink::before{background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(139,110,60,0.06) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(139,110,60,0.04) 40px);}
-html.night,.night{background-color:#0d0f14;color:#e2e8f0;}
+html.night,.night{background-color:#1a1c23;color:#e2e8f0;}
 html.mist,.mist{background-color:#E8F1F8;color:#1E3D52;}
 html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 
@@ -188,18 +189,13 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 .mist  .p-tab.on .p-tab-icon,.mist  .p-tab.on .p-tab-label{color:#1E3D52;}
 .ink   .p-tab-icon,.ink   .p-tab-label{color:#C9B99A;}
 .ink   .p-tab.on .p-tab-icon,.ink   .p-tab.on .p-tab-label{color:#3D2B1A;}
-.nav-more{background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1px;}
-.nav-more-icon{font-size:15px;transition:color 1.4s ease;}
-.nav-more-label{font-size:12px;white-space:nowrap;transition:color 1.4s ease;}
-.night .nav-more-icon,.night .nav-more-label{color:#1f2937;}
-.mist  .nav-more-icon,.mist  .nav-more-label{color:#C2D8E8;}
-.ink   .nav-more-icon,.ink   .nav-more-label{color:#C9B99A;}
 
 /* ── 吉祥物 ── */
 #mascot-wrap{position:fixed;left:-10%;bottom:0;width:min(70vw,55vh);z-index:200;pointer-events:none;transition:opacity 2s ease,transform 2s ease;}
 #mascot-wrap.fade-out{opacity:0;transform:translateY(20px);}
 #mascot-img{width:100%;display:block;}
 #mascot-btn{position:fixed;left:16px;bottom:80px;width:82px;height:82px;border-radius:50%;cursor:pointer;z-index:200;border:none;padding:0;overflow:hidden;opacity:0;transition:opacity .5s ease;background:transparent;}
+#mascot-btn:not(.visible){pointer-events:none;}
 #mascot-btn.visible{opacity:1;}
 #mascot-btn img{width:100%;height:100%;object-fit:cover;object-position:center center;}
 
@@ -380,10 +376,6 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
     <span class="p-tab-icon">⚡</span>
     <span class="p-tab-label">修為</span>
   </a>
-  <button class="nav-more">
-    <span class="nav-more-icon">···</span>
-    <span class="nav-more-label">更多</span>
-  </button>
   <a href="contact.html" class="p-tab">
     <span class="p-tab-icon">✉️</span>
     <span class="p-tab-label">聯絡</span>
@@ -392,10 +384,12 @@ html.ink,.ink{background-color:#F2EDE3;color:#3D2B1A;}
 
 <script>
 const ICONS={night:'☾',mist:'☀',ink:'🌆'};
-const BG={night:'#0d0f14',mist:'#E8F1F8',ink:'#F2EDE3'};
+const BG={night:'#1a1c23',mist:'#E8F1F8',ink:'#F2EDE3'};
 const THEME_COLORS={night:'#1a1c23',mist:'#5BA3C9',ink:'#C9B99A'};
-let themePref='auto';
-let manualOverride=false,manualTimer=null;
+// ── 主題偏好（四頁共用）：存在 localStorage 跨頁保留，手動選擇 1 小時後回到自動 ──
+const THEME_KEY='xxThemePref';
+function loadThemePref(){try{const v=JSON.parse(localStorage.getItem(THEME_KEY));if(v&&v.until>Date.now())return v.pref;}catch(e){}return'auto';}
+function saveThemePref(p){try{if(p==='auto')localStorage.removeItem(THEME_KEY);else localStorage.setItem(THEME_KEY,JSON.stringify({pref:p,until:Date.now()+3600000}));}catch(e){}}
 
 function getAutoTheme(){const h=new Date().getHours();return h<8?'night':h<16?'mist':'ink';}
 function getTheme(){return document.documentElement.classList.contains('night')?'night':document.documentElement.classList.contains('mist')?'mist':'ink';}
@@ -420,34 +414,24 @@ function updateThemeCards(){
   const t=getTheme();
   ['auto','night','mist','ink'].forEach(k=>{
     const el=document.getElementById('th-'+k);
-    if(el)el.classList.toggle('on',k===themePref);
+    if(el)el.classList.toggle('on',k===loadThemePref());
   });
 }
-function setThemePref(pref){
-  themePref=pref;
-  manualOverride=(pref!=='auto');
-  if(manualOverride){
-    if(manualTimer)clearTimeout(manualTimer);
-    manualTimer=setTimeout(()=>{manualOverride=false;themePref='auto';updateThemeCards();},3600000);
-    applyTheme(pref);
-  } else {
-    applyTheme(getAutoTheme());
-  }
-  updateThemeCards();
-}
+function syncTheme(){const p=loadThemePref(),t=p==='auto'?getAutoTheme():p;if(!document.body.classList.contains(t))applyTheme(t);updateThemeDot(t);updateThemeCards();}
+function setThemePref(pref){saveThemePref(pref);syncTheme();}
 function cyclePillTheme(){
   const order=['night','mist','ink','auto'];
-  const cur=themePref;
+  const cur=loadThemePref();
   const next=order[(order.indexOf(cur)+1)%order.length];
   setThemePref(next);
 }
 function checkTime(){
   updateClock(getTheme());
-  if(!manualOverride){const a=getAutoTheme();if(a!==getTheme())applyTheme(a);}
+  syncTheme();
   updateReminder();
   updateEra();
 }
-applyTheme(getAutoTheme());
+syncTheme();
 setInterval(checkTime,30000);
 
 // ── 提醒小語 ──
