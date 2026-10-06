@@ -206,10 +206,7 @@ button,input,textarea,select{font-family:inherit;}
 .night .ticket-mamo{color:#94a3b8;}.mist .ticket-mamo{color:#4A7090;}.ink .ticket-mamo{color:#7A5C3A;}
 
 /* ── Between-session challenge ── */
-.between-challenge{border-radius:12px;padding:12px 14px;margin:8px 0;transition:all 1.4s ease;}
-.night .between-challenge{background:rgba(255,255,255,0.03);outline:1px solid #2d3748;}
-.mist  .between-challenge{background:rgba(250,253,255,0.7);outline:.5px solid #C2D8E8;}
-.ink   .between-challenge{background:rgba(255,251,242,0.7);outline:.5px solid #C9B99A;}
+.between-challenge{margin:0;padding:0;}
 .between-challenge .fold-toggle{margin-bottom:0;}
 
 /* ── Timeline ── */
@@ -867,8 +864,8 @@ function calc(){
       // 場次間：挑戰帖選填 + timeline card
       html+=`
       <div class="tl-item">
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line" style="min-height:40px;"></div></div>
-        <div style="flex:1;padding:6px 0;">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div style="flex:1;padding:0;">
           <div class="between-challenge">
             <div style="display:flex;gap:8px;margin-bottom:4px;">
               <button class="fold-toggle" onclick="togglePillS(${nextIdx})" style="flex:1;margin-bottom:0;">
