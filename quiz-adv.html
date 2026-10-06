@@ -264,6 +264,16 @@
 .night #sponsor-btn::after{background:rgba(30,30,30,.85);color:#f9fafb;}
 .mist  #sponsor-btn::after{background:rgba(255,255,255,.9);color:#1e3a5f;}
 .ink   #sponsor-btn::after{background:rgba(61,43,26,.9);color:#F2EDE3;}
+
+/* ── 品牌標題（四頁共用）：🐶 修仙（粗體、各主題漸層）小幫狗（細體） ── */
+.night .brand,.mist .brand,.ink .brand{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:300;letter-spacing:.1em;line-height:1.5;margin:0 0 2px;display:flex;align-items:center;gap:8px;background:none;-webkit-text-fill-color:currentColor;transition:color 1.4s ease;}
+.night .brand{color:#e2e8f0;}
+.mist  .brand{color:#1E3D52;}
+.ink   .brand{color:#3D2B1A;}
+.brand b{font-weight:700;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.night .brand b{background-image:linear-gradient(135deg,#fef08a,#fbbf24);}
+.mist  .brand b{background-image:linear-gradient(135deg,#1E6FA8,#23866A);}
+.ink   .brand b{background-image:linear-gradient(135deg,#A8321A,#8E5A06);}
 </style>
 </head>
 <body>
@@ -272,8 +282,7 @@
     <div style="max-width:1200px;margin:0 auto">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
             <div>
-                <h1 class="site-title" style="font-size:20px;margin:0 0 2px 0;display:flex;align-items:center;gap:8px">
-                    <span class="emoji">🐶</span> 修仙小幫狗
+                <h1 class="site-title brand"><span class="emoji">🐶</span><span><b>修仙</b>小幫狗</span>
                     <span class="count-badge" id="totalBadge" style="font-size:12px;font-weight:400">154 筆</span>
                 </h1>
                 <h3 class="site-title" style="font-size:15px;margin:0 0 4px 0;letter-spacing:.08em"><span class="emoji">☯</span> 混沌奇遇寶典</h3>
