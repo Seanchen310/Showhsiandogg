@@ -543,7 +543,9 @@ async function readShot(w,file){
   await w.setParameters({tessedit_pageseg_mode:'7'});
   const i=lines.findIndex(l=>/EXP/i.test(l.text));
   if(i>=0){
-    const L=lines[i].bbox,m=lines[i].text.match(/[:：]\s*(\d+(?:\.\d+)?)/);
+    const L=lines[i].bbox;
+    // 速度本身：裁出這一行放大再讀一次，比整張圖讀得準
+    const m=(await strip(w,img,L.x0,L.x1,L.y0-8,L.y1+8)).match(/[:：]\s*(\d+(?:\.\d+)?)/)||lines[i].text.match(/[:：]\s*(\d+(?:\.\d+)?)/);
     if(m)r.base=+m[1];
     const t=await strip(w,img,L.x0,L.x1,L.y0-8,L.y1+8,colorful),n=t.match(/\+\s*(\d+(?:\.\d+)?)/);
     if(n)r.bonus=+n[1];
