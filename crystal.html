@@ -449,9 +449,8 @@ function nextSession(readyAt,era){
 }
 let plan=[];
 const NIGHT_SECS=8*3600;
+// 上次收結晶的時間落在 0 點到 8 點之間
 const inNight=ms=>new Date(ms).getHours()<8;
-// 從 t 到 tc 之間是否經過午夜
-const crossesNight=(t,tc)=>new Date(t).toDateString()!==new Date(tc).toDateString();
 
 const STAGE=(r,i)=>`Lv.${REALMS[r].lv}${SLABELS[i]}`;
 // 往後排：每次結晶到目標 % 就收；修為滿一期自動進下一期（結晶上限跟著變）；
@@ -462,8 +461,8 @@ function schedule(cur,tgt,spd,max){
   const trackExp=S.exp!=='';
   while(ev.length<max){
     let cap=REALMS[r].stages[i]*0.4,A=cap*tgt/100,tc=t+Math.max(0,A-c)/spd*1000,night=false;
-    // 午夜到早上 8 點之間會滿的話，改用夜間容量：最多累積 8 小時，讓玩家睡覺
-    if(inNight(tc)||crossesNight(t,tc)){const N=NIGHT_SECS*spd;if(N>cap){cap=N;A=N*tgt/100;tc=t+Math.max(0,A-c)/spd*1000;night=true;}}
+    // 0 點後收的結晶，滿了不會停，可以一直累積到 8 小時，讓玩家睡覺
+    if(inNight(t-c/spd*1000)){const N=NIGHT_SECS*spd;if(N>cap){cap=N;A=N*tgt/100;tc=t+Math.max(0,A-c)/spd*1000;night=true;}}
     if(wait&&wait.getTime()<=tc){
       c=Math.min(cap,c+(wait.getTime()-t)/1000*spd);t=wait.getTime();
       exp-=REALMS[r].stages[2];r++;i=0;wait=null;
