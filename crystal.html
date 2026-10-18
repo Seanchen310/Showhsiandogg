@@ -500,11 +500,11 @@ function calc(){
   out.innerHTML=`<div class="answer"><span class="s">修為結晶到 ${tgt}%</span><span class="big">${clock(first.t)}</span><span class="how">還要 ${dur(secs)}・目前約 ${Math.floor(nowPct)}%</span>
     <div class="cnt"><span>要設幾個提醒</span><div class="chips" role="group" aria-label="提醒個數">${[1,3,5,8].map(k=>`<button type="button" data-n="${k}" aria-pressed="${k===n}" class="${k===n?'on':''}">${k}</button>`).join('')}</div></div>
     <ol class="plan">${plan.map((e,k)=>`<li class="${k<n?'in':''}${e.kind==='mj'?' mj':''}"><b>${clock(e.t)}</b><span>${e.label}</span></li>`).join('')}</ol>
-    <div class="cal"><button type="button" id="ics">加入 iPhone 行事曆</button><a id="gcal" target="_blank" rel="noopener">Google 日曆</a></div>
+    <div class="cal"><a id="ics">加入 iPhone 行事曆</a><a id="gcal" target="_blank" rel="noopener">Google 日曆</a></div>
     ${n>1?'<span class="gnote">Google 日曆一次只能加第 1 個。</span>':''}</div>
     ${S.exp===''?'<p class="fine">填「這期目前修為」，才算得到跨期後結晶上限變大。</p>':crossAt>=0?'<p class="fine">修魔收結晶的數值會浮動，跨期之後的時間會提早或延後，跨期後請再上傳截圖重算。</p>':''}`;
   out.querySelectorAll('.cnt button').forEach(b=>b.addEventListener('click',()=>{S.n=+b.dataset.n;calc();}));
-  $('ics').addEventListener('click',()=>downloadIcs(plan.slice(0,n)));
+  $('ics').href=icsUrl(plan.slice(0,n));
   $('gcal').href=gcalUrl(first);
   $('live').textContent=`${tgt}% 約在 ${clock(first.t)}`;
 }
@@ -514,14 +514,8 @@ setInterval(()=>{if(!document.activeElement||document.activeElement.tagName!=='I
 const utc=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
 const DESC='修仙小幫狗 結晶提醒 https://showhsiandogg.netlify.app/crystal.html';
 const title=e=>e.kind==='mj'?`⛰️ ${e.label}`:`💎 ${e.label}（${+S.tgt||99}%）`;
-function downloadIcs(evs){
-  if(!evs.length)return;
-  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//showhsiandogg//crystal//ZH'];
-  evs.forEach((e,k)=>L.push('BEGIN:VEVENT',`UID:${Date.now()}-${k}@showhsiandogg`,`DTSTAMP:${utc(new Date())}`,`DTSTART:${utc(e.t)}`,`DTEND:${utc(new Date(e.t.getTime()+5*60000))}`,
-    `SUMMARY:${title(e)}`,`DESCRIPTION:${DESC}`,'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${title(e)}`,'TRIGGER:PT0M','END:VALARM','END:VEVENT'));
-  L.push('END:VCALENDAR');
-  const a=document.createElement('a');a.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(L.join('\r\n'));a.download='crystal.ics';document.body.appendChild(a);a.click();a.remove();
-}
+// iPhone：打開伺服器回傳的行事曆檔，會直接跳出「加入行事曆」畫面
+const icsUrl=evs=>'/.netlify/functions/ics?e='+encodeURIComponent(evs.map(e=>Math.round(e.t.getTime())+'~'+title(e)).join('|'));
 function gcalUrl(e){
   return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(title(e))+'&dates='+utc(e.t)+'/'+utc(new Date(e.t.getTime()+5*60000))+'&details='+encodeURIComponent(DESC);
 }
@@ -539,11 +533,13 @@ const colorful=(r,g,b)=>Math.max(r,g,b)-Math.min(r,g,b)>40?0:255; // 綠色的 (
 // 主畫面：先找「EXP/s」那行，再往上找進度條的「目前/升級所需」
 // 結晶彈窗：「344400 修為」與「0%」
 async function readShot(w,file){
-  const bmp=await createImageBitmap(file),img=document.createElement('canvas'),r={};
-  img.width=bmp.width;img.height=bmp.height;img.getContext('2d').drawImage(bmp,0,0);bmp.close();
+  const el=await new Promise((ok,ng)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ng(new Error('讀不到圖片'));i.src=URL.createObjectURL(file);});
+  const img=document.createElement('canvas'),r={};img.width=el.naturalWidth;img.height=el.naturalHeight;img.getContext('2d').drawImage(el,0,0);URL.revokeObjectURL(el.src);
+  // 整張先縮到 1000 寬找出各行位置（手機記憶體較省），再回原圖裁切細讀
+  const k=Math.min(1,1000/img.width),sm=document.createElement('canvas');sm.width=img.width*k|0;sm.height=img.height*k|0;sm.getContext('2d').drawImage(img,0,0,sm.width,sm.height);
   await w.setParameters({tessedit_pageseg_mode:'3'});
-  const {data}=await w.recognize(img,{},{blocks:true});
-  const lines=data.blocks.flatMap(b=>b.paragraphs.flatMap(p=>p.lines));
+  const {data}=await w.recognize(sm,{},{blocks:true});
+  const lines=data.blocks.flatMap(b=>b.paragraphs.flatMap(p=>p.lines)).map(l=>({text:l.text,bbox:{x0:l.bbox.x0/k,x1:l.bbox.x1/k,y0:l.bbox.y0/k,y1:l.bbox.y1/k}}));
   await w.setParameters({tessedit_pageseg_mode:'7'});
   const i=lines.findIndex(l=>/EXP/i.test(l.text));
   if(i>=0){
@@ -583,7 +579,7 @@ $('shots').addEventListener('change',async e=>{
     ['spd','exp','cur'].forEach(k=>$(k).value=S[k]);
     msg.textContent=got.length?`已填入：${got.join('、')}。請確認數字是否正確。`:'沒辨識到數字，請手動填入，或換一張較清楚的截圖。';
     calc();
-  }catch(err){msg.textContent='辨識失敗，請手動填入。';}
+  }catch(err){msg.textContent=`辨識失敗，請手動填入。（${(err&&err.message)||err}）`;}
   btn.classList.remove('busy');e.target.value='';
 });
 if(ri>=0&&ri<REALMS.length){setRealm(ri,true);if(si>=0&&si<3)setStage(si);else{si=-1;calc();}}else{ri=-1;si=-1;renderRealms();calc();}
